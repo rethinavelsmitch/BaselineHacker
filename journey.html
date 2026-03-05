@@ -9,12 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-page: #f3f4f6;
-      --card: #ffffff;
-      --ink-900: #1f2937;
-      --ink-700: #374151;
-      --ink-500: #6b7280;
-      --line: #d1d5db;
+      --bg-page: #040404;
+      --card: #0c0c0c;
+      --ink-900: #f1f3f6;
+      --ink-700: rgba(241, 243, 246, 0.78);
+      --ink-500: rgba(241, 243, 246, 0.52);
+      --line: rgba(241, 243, 246, 0.14);
       --radius-md: 14px;
       --radius-lg: 18px;
       --radius-full: 9999px;
@@ -76,7 +76,7 @@
 
     .score-summary {
       background: var(--card);
-      border: 1px solid #e5e7eb;
+      border: 1px solid rgba(241, 243, 246, 0.08);
       border-radius: var(--radius-lg);
       padding: 14px 10px;
       margin-bottom: 16px;
@@ -84,7 +84,7 @@
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 8px 30px rgba(17, 24, 39, 0.06);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
     }
     .score-cell { text-align: center; }
     .score-label {
@@ -125,9 +125,36 @@
       padding-right: 4px;
       min-height: 560px;
     }
+    .journey-start-pill {
+      position: absolute;
+      left: 50%;
+      top: 6px;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(241, 243, 246, 0.18);
+      background: #121212;
+      color: var(--ink-900);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.36);
+    }
+    .journey-start-pill .start-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #71f0ff;
+      box-shadow: 0 0 0 3px rgba(113, 240, 255, 0.2);
+    }
     .timeline-wrap::-webkit-scrollbar { width: 6px; }
     .timeline-wrap::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
+      background: rgba(241, 243, 246, 0.28);
       border-radius: var(--radius-full);
     }
     .path-svg {
@@ -148,6 +175,31 @@
       stroke-dashoffset: 2200;
       animation: draw 2.4s ease forwards;
     }
+    .journey-end-icon {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #0c0c0c;
+      border: 1px solid rgba(241, 243, 246, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #71f0ff;
+      z-index: 2;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    }
+    .journey-end-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
     .phase-list {
       position: relative;
@@ -164,15 +216,15 @@
 
     .phase-card {
       background: var(--card);
-      border: 1px solid #e5e7eb;
+      border: 1px solid rgba(241, 243, 246, 0.12);
       border-radius: var(--radius-md);
-      padding: 10px 9px;
-      box-shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+      padding: 9px 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.36);
       transform: translateY(12px);
       opacity: 0;
       animation: reveal 420ms ease forwards;
-      min-height: 138px;
-      width: min(220px, 54vw);
+      min-height: 132px;
+      width: min(206px, 50vw);
     }
     .phase-head {
       display: flex;
@@ -190,39 +242,39 @@
     }
     .phase-points {
       font-size: 11px;
-      color: #0f766e;
+      color: #71f0ff;
       font-weight: 700;
     }
     .phase-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
-      color: #111827;
-      margin-bottom: 3px;
+      color: var(--ink-900);
+      margin-bottom: 2px;
       line-height: 1.2;
     }
     .phase-type {
       display: inline-block;
       font-size: 10px;
-      color: #4b5563;
-      border: 1px solid #d1d5db;
+      color: var(--ink-700);
+      border: 1px solid rgba(241, 243, 246, 0.16);
       border-radius: var(--radius-full);
       padding: 2px 8px;
       margin-bottom: 6px;
       font-weight: 600;
-      background: #f9fafb;
+      background: #121212;
     }
     .phase-note {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
+      background: #121212;
+      border: 1px solid rgba(241, 243, 246, 0.12);
       border-radius: 10px;
-      padding: 7px;
-      font-size: 10px;
-      color: #4b5563;
-      min-height: 60px;
+      padding: 6px;
+      font-size: 9.5px;
+      color: var(--ink-700);
+      min-height: 54px;
       line-height: 1.45;
     }
     .phase-note strong {
-      color: #1f2937;
+      color: var(--ink-900);
       display: block;
       margin-bottom: 4px;
       font-size: 11px;
@@ -259,6 +311,7 @@
     <div class="score-delta" id="deltaText">+0.0 projected improvement</div>
 
     <div class="timeline-wrap">
+      <div class="journey-start-pill"><span class="start-dot"></span>You are here</div>
       <svg class="path-svg" viewBox="0 0 420 960" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <linearGradient id="trackGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -272,6 +325,7 @@
         <path class="journey-path" id="journeyPath" d="M210 48 C340 96, 340 176, 210 228 C80 280, 80 360, 210 412 C340 464, 340 544, 210 596 C80 648, 80 728, 210 780 C340 832, 340 912, 210 948" />
       </svg>
       <div class="phase-list" id="phaseList"></div>
+      <div class="journey-end-icon" id="journeyEndIcon" aria-hidden="true"></div>
     </div>
   </div>
 
@@ -292,6 +346,22 @@
       }
     }
 
+    function getEndIconMarkup(score) {
+      if (score > 85) {
+        return '<svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.2 8.7-7 10-3.8-1.3-7-5-7-10V6l7-3z"></path><path d="M8.5 12.5l2.2 2.2 4.8-4.8"></path></svg>';
+      }
+      if (score > 75) {
+        return '<svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.4A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"></path><path d="M8 12h2l1-2 2 4 1-2h2"></path></svg>';
+      }
+      if (score > 65) {
+        return '<svg viewBox="0 0 24 24"><path d="M4 13h4l2-6 4 12 2-6h4"></path><path d="M3 6h18"></path></svg>';
+      }
+      if (score > 50) {
+        return '<svg viewBox="0 0 24 24"><path d="M12 3l9 16H3l9-16z"></path><path d="M12 9v5"></path><path d="M12 17h.01"></path></svg>';
+      }
+      return '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9 9l6 6"></path><path d="M15 9l-6 6"></path></svg>';
+    }
+
     function init() {
       const payload = loadPayload();
       const current = Number(payload.currentScore || 0);
@@ -310,6 +380,10 @@
       const list = document.getElementById('phaseList');
       if (!actions.length) {
         list.innerHTML = '<div class="phase-card"><div class="phase-title">No selected actions</div><div class="phase-note"><strong>Recommendation</strong>Go back and choose actions to build your score journey.</div></div>';
+        const endIconEmpty = document.getElementById('journeyEndIcon');
+        endIconEmpty.innerHTML = getEndIconMarkup(target);
+        endIconEmpty.style.color = getInferenceColor(target);
+        endIconEmpty.style.top = '500px';
         return;
       }
 
@@ -335,7 +409,7 @@
       const wrap = document.querySelector('.timeline-wrap');
       const svg = document.querySelector('.path-svg');
       const path = document.getElementById('journeyPath');
-      const contentHeight = Math.max(wrap.clientHeight, list.scrollHeight + 120);
+      const contentHeight = Math.max(wrap.clientHeight, list.scrollHeight + 140);
       const waves = Math.max(actions.length + 1, 5);
       const startY = 42;
       const step = (contentHeight - startY - 24) / waves;
@@ -351,6 +425,11 @@
       svg.style.height = contentHeight + 'px';
       svg.setAttribute('viewBox', `0 0 420 ${Math.round(contentHeight)}`);
       path.setAttribute('d', d);
+
+      const endIcon = document.getElementById('journeyEndIcon');
+      endIcon.innerHTML = getEndIconMarkup(target);
+      endIcon.style.color = getInferenceColor(target);
+      endIcon.style.top = `${contentHeight - 52}px`;
     }
 
     if (document.readyState === 'loading') {
