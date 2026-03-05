@@ -278,7 +278,7 @@
 
     /* ─── Why This Score ─── */
     .why-score {
-      padding: 24px;
+      padding: 16px;
       --why-stagger: 80ms;
       background: linear-gradient(135deg, rgba(92, 5, 165, 0.1) 0%, rgba(73, 0, 255, 0.05) 100%);
       position: relative;
@@ -666,10 +666,10 @@
     }
 
     .why-list-subtitle {
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
+      text-transform: none;
+      letter-spacing: 0.2px;
       color: var(--text-muted);
       margin-top: 2px;
       margin-bottom: 10px;
@@ -677,7 +677,7 @@
 
     @media (max-width: 767px) {
       .why-list-subtitle {
-        font-size: 9px;
+        font-size: 11px;
         margin-bottom: 8px;
         letter-spacing: 0.4px;
       }
@@ -757,8 +757,8 @@
       border: 1px solid rgba(202, 15, 136, 0.2);
       border-radius: var(--radius-md);
       transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-      opacity: 0;
-      animation: whyItemIn 0.5s ease forwards;
+      opacity: 1;
+      animation: none;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -767,18 +767,11 @@
     }
 
     .biomarker-detail-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      transition: left 0.6s ease;
+      content: none;
     }
 
     .biomarker-detail-item:hover::before {
-      left: 100%;
+      content: none;
     }
 
     @media (max-width: 767px) {
@@ -817,6 +810,7 @@
       flex-direction: column;
       gap: 6px;
       min-width: 0;
+      text-align: left;
     }
 
     .biomarker-header {
@@ -824,6 +818,40 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
+    }
+    .biomarker-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: left;
+    }
+    .biomarker-status {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+      flex-shrink: 0;
+      text-transform: none;
+    }
+    .biomarker-status.positive {
+      background: rgba(34, 197, 94, 0.14);
+      color: #22C55E;
+      border: 1px solid rgba(34, 197, 94, 0.25);
+    }
+    .biomarker-status.negative {
+      background: rgba(248, 113, 113, 0.14);
+      color: #F87171;
+      border: 1px solid rgba(248, 113, 113, 0.25);
+    }
+    @media (max-width: 767px) {
+      .biomarker-name {
+        font-size: 11px;
+      }
+      .biomarker-status {
+        font-size: 9px;
+        padding: 2px 6px;
+      }
     }
 
     .impact-bar {
@@ -888,14 +916,7 @@
     }
 
     .external-influencers-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(113, 240, 255, 0.1), transparent);
-      transition: left 0.6s ease;
+      content: none;
     }
 
     @media (max-width: 767px) {
@@ -930,7 +951,7 @@
     }
 
     .external-influencers-item:hover::before {
-      left: 100%;
+      content: none;
     }
 
     .external-icon {
@@ -951,6 +972,7 @@
       gap: 6px;
       flex: 1;
       min-width: 0;
+      text-align: left;
     }
 
     .external-header {
@@ -1035,6 +1057,17 @@
     .external-type.supplement {
       background: rgba(34, 197, 94, 0.15);
       color: #22C55E;
+    }
+    .external-status {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(113, 240, 255, 0.22);
+      color: #71F0FF;
+      background: rgba(113, 240, 255, 0.08);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     /* Analytics Section */
@@ -1442,6 +1475,30 @@
 
     .why-list-item:last-child {
       margin-bottom: 0;
+    }
+    .why-list-item.is-hidden {
+      display: none;
+    }
+    .why-hidden-item {
+      display: none !important;
+    }
+    .why-view-more {
+      margin-top: 8px;
+      width: 100%;
+      border: 1px solid var(--border-default);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: var(--font-sans);
+    }
+    .why-view-more:hover {
+      color: var(--text-primary);
+      border-color: var(--text-muted);
     }
 
     .why-list-item .severity-dot {
@@ -2029,7 +2086,7 @@
       score: 70,
       uncappedScore: 77,   // When set, score is capped by top limiter
       cappingFactor: 'Vitamin D',
-      lastUpdated: '2026-03-04T14:30:00Z',
+      lastUpdated: '2026-02-26T14:30:00Z',
       contributors: {
         negative: [
           { id: 'A2', metric: 'BMI', value: '5.3', unit: 'ng/ml', status: 'High', contribution: 18, potentialPoints: 8 },
@@ -2249,7 +2306,7 @@
        RENDERING
        ═══════════════════════════════════════════ */
 
-    function animateNumber(el, from, to, duration = 800) {
+    function animateNumber(el, from, to, duration = 800, decimals = 1) {
       const start = performance.now();
       const diff = to - from;
       function tick(now) {
@@ -2257,7 +2314,7 @@
         const progress = Math.min(elapsed / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
         const current = from + diff * eased;
-        el.textContent = current.toFixed(1);
+        el.textContent = current.toFixed(decimals);
         if (progress < 1) requestAnimationFrame(tick);
       }
       requestAnimationFrame(tick);
@@ -2359,7 +2416,7 @@
       const score = BASELINE.score;
       const band = getBand(score);
       const numEl = document.getElementById('mainScoreNum');
-      animateNumber(numEl, 0, score, 1200);
+      animateNumber(numEl, 0, Math.round(score), 1200, 0);
       renderScoreDots(score, true);
 
       const badge = document.getElementById('mainBandBadge');
@@ -2380,6 +2437,23 @@
       return null;
     }
 
+    function formatStatusLabel(status) {
+      if (!status) return 'Good';
+      const s = String(status).toLowerCase();
+      if (s.includes('optimal')) return 'Optimal';
+      if (s.includes('good')) return 'Good';
+      if (s.includes('normal')) return 'Good';
+      if (s.includes('high') || s.includes('low') || s.includes('deficient') || s.includes('poor') || s.includes('borderline')) return 'Needs attention';
+      return status;
+    }
+
+    function getExternalStatus(type) {
+      const t = String(type || '').toLowerCase();
+      if (t === 'supplement') return 'Good';
+      if (t === 'medication') return 'Monitored';
+      return 'Info';
+    }
+
     function renderContributors() {
       const container = document.getElementById('contributorsContainer');
       const score = BASELINE.score;
@@ -2397,21 +2471,22 @@
       let html = '<div class="why-grid">';
 
       // Right column: What's Working Well (FIRST) - EXPANDABLE
-      html += '<div class="why-card why-delay-1 collapsible collapsed" data-card="positive">';
+      html += '<div class="why-card why-delay-1 collapsible" data-card="positive">';
       html += '<div class="why-card-header">';
       html += '<div class="why-card-title-section">';
       html += '<div class="why-list-title helping">✨ What\'s Working Well</div>';
-      html += '<div class="why-list-subtitle">Positive Biomarkers Supporting Your Health</div>';
+      html += '<div class="why-list-subtitle">Positive biomarkers supporting your health</div>';
       html += '</div>';
       html += '<div class="why-card-toggle-icon">▼</div>';
       html += '</div>';
       html += '<div class="why-card-content">';
-      for (const c of pos) {
+      for (const [idx, c] of pos.entries()) {
+        const hiddenCls = idx >= 4 ? ' why-hidden-item' : '';
         html += `<div class="biomarker-detail-item">
-          <div class="biomarker-left">
+          <div class="biomarker-left${hiddenCls}" data-list-item="positive">
             <div class="biomarker-header">
               <span class="biomarker-name">${c.metric}</span>
-              <span class="biomarker-status positive">${c.status}</span>
+              <span class="biomarker-status positive">${formatStatusLabel(c.status)}</span>
             </div>
             <div class="biomarker-value-row">
               <span class="biomarker-value">${c.value}</span>
@@ -2419,26 +2494,30 @@
             </div>
           </div>
         </div>`;
+      }
+      if (pos.length > 4) {
+        html += `<button class="why-view-more" data-viewmore="positive" data-expanded="0">View more</button>`;
       }
       html += '</div>';
       html += '</div>';
 
       // Left column: Areas Needing Attention (SECOND) - EXPANDABLE
-      html += '<div class="why-card why-delay-2 collapsible collapsed" data-card="negative">';
+      html += '<div class="why-card why-delay-2 collapsible" data-card="negative">';
       html += '<div class="why-card-header">';
       html += '<div class="why-card-title-section">';
       html += '<div class="why-list-title limiting">⚠️ Areas Needing Attention</div>';
-      html += '<div class="why-list-subtitle">Negative Key Biomarkers Impacting Your Score</div>';
+      html += '<div class="why-list-subtitle">Negative key biomarkers impacting your score</div>';
       html += '</div>';
       html += '<div class="why-card-toggle-icon">▼</div>';
       html += '</div>';
       html += '<div class="why-card-content">';
-      for (const c of neg) {
+      for (const [idx, c] of neg.entries()) {
+        const hiddenCls = idx >= 4 ? ' why-hidden-item' : '';
         html += `<div class="biomarker-detail-item">
-          <div class="biomarker-left">
+          <div class="biomarker-left${hiddenCls}" data-list-item="negative">
             <div class="biomarker-header">
               <span class="biomarker-name">${c.metric}</span>
-              <span class="biomarker-status negative">${c.status}</span>
+              <span class="biomarker-status negative">${formatStatusLabel(c.status)}</span>
             </div>
             <div class="biomarker-value-row">
               <span class="biomarker-value">${c.value}</span>
@@ -2447,27 +2526,32 @@
           </div>
         </div>`;
       }
+      if (neg.length > 4) {
+        html += `<button class="why-view-more" data-viewmore="negative" data-expanded="0">View more</button>`;
+      }
       html += '</div>';
       html += '</div>';
 
       // Third column: External Influencers (THIRD) - EXPANDABLE
-      html += '<div class="why-card why-delay-3 collapsible collapsed" data-card="external">';
+      html += '<div class="why-card why-delay-3 collapsible" data-card="external">';
       html += '<div class="why-card-header">';
       html += '<div class="why-card-title-section">';
       html += '<div class="why-list-title" style="color: #71F0FF;">🔬 External Influencers</div>';
-      html += '<div class="why-list-subtitle">Medications & Supplements Affecting Your Markers</div>';
+      html += '<div class="why-list-subtitle">Medications & supplements affecting your markers</div>';
       html += '</div>';
       html += '<div class="why-card-toggle-icon">▼</div>';
       html += '</div>';
       html += '<div class="why-card-content">';
-      for (const e of ext) {
+      for (const [idx, e] of ext.entries()) {
+        const hiddenCls = idx >= 4 ? ' why-hidden-item' : '';
         const typeClass = e.type.toLowerCase();
-        html += `<div class="external-influencers-item">
+        html += `<div class="external-influencers-item${hiddenCls}" data-list-item="external">
           <div class="external-icon">${e.icon}</div>
           <div class="external-content">
             <div class="external-header">
               <span class="external-name">${e.name}</span>
               <span class="external-type ${typeClass}">${e.type}</span>
+              <span class="external-status">${getExternalStatus(e.type)}</span>
             </div>
             <div class="external-impact">${e.impact}</div>
             <div class="external-biomarkers">
@@ -2475,6 +2559,9 @@
             </div>
           </div>
         </div>`;
+      }
+      if (ext.length > 4) {
+        html += `<button class="why-view-more" data-viewmore="external" data-expanded="0">View more</button>`;
       }
       html += '</div>';
       html += '</div>';
@@ -2502,6 +2589,18 @@
               }
             }
           }
+        });
+      });
+      container.querySelectorAll('.why-view-more').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const key = this.dataset.viewmore;
+          const expanded = this.dataset.expanded === '1';
+          container.querySelectorAll(`[data-list-item="${key}"]`).forEach((el, idx) => {
+            if (idx >= 4) el.classList.toggle('why-hidden-item', expanded);
+          });
+          this.dataset.expanded = expanded ? '0' : '1';
+          this.textContent = expanded ? 'View more' : 'View less';
         });
       });
 

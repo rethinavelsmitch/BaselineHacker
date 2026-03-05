@@ -351,6 +351,7 @@
 
     .action-view-more {
       margin-top: 6px;
+      margin-bottom: 12px;
       display: inline-flex;
       align-items: center;
       gap: 4px;
@@ -1289,6 +1290,8 @@
 
     const selected = new Set();
     const expandedActionItems = new Set();
+    const panelScrollByTab = new Map();
+    let tabsScrollLeft = 0;
     let gam = {};  // gamification state
     let bioExpanded = false;
     let recExpanded = false;
@@ -1409,6 +1412,10 @@
 
 
     function setActiveTab(typeId) {
+      const panel = document.querySelector('#actionTypesContainer .action-category-panel');
+      if (panel) panelScrollByTab.set(activeTab, panel.scrollTop);
+      const tabs = document.querySelector('#actionTypesContainer .action-tabs-scroll');
+      if (tabs) tabsScrollLeft = tabs.scrollLeft;
       activeTab = typeId;
       renderActionGrid();
     }
@@ -1421,7 +1428,22 @@
 
     function renderActionGrid() {
       const locked = gam.committedToday;
+      const prevTabs = document.querySelector('#actionTypesContainer .action-tabs-scroll');
+      if (prevTabs) tabsScrollLeft = prevTabs.scrollLeft;
+      const prevPanel = document.querySelector('#actionTypesContainer .action-category-panel');
+      const prevActiveTabEl = document.querySelector('#actionTypesContainer .action-tab.active');
+      const prevTabId = prevActiveTabEl ? prevActiveTabEl.dataset.tab : activeTab;
+      if (prevPanel && prevTabId) panelScrollByTab.set(prevTabId, prevPanel.scrollTop);
+
       let html = '<div class="action-tabs-wrap"><div class="action-tabs-scroll">';
+
+      const allSelectedCount = ALL_CATEGORIES.filter(c => selected.has(c.id)).length;
+      html += `<div class="action-tab ${activeTab === 'all' ? 'active' : ''}" data-tab="all">
+        <span>◉</span>
+        <span>All</span>
+        <span class="tab-badge ${allSelectedCount ? '' : 'empty'}">${allSelectedCount}/${ALL_CATEGORIES.length}</span>
+      </div>`;
+
       for (const type of ACTION_TYPES) {
         const typeSelected = type.categories.filter(c => selected.has(c.id)).length;
         const isActive = activeTab === type.id;
@@ -1432,17 +1454,18 @@
         </div>`;
       }
       html += '</div><div class="action-category-panel"><div class="action-category-grid">';
-      const type = ACTION_TYPES.find(t => t.id === activeTab) || ACTION_TYPES[0];
+      const type = activeTab === 'all' ? null : (ACTION_TYPES.find(t => t.id === activeTab) || ACTION_TYPES[0]);
+      const sourceCategories = type ? type.categories : ALL_CATEGORIES;
       const isExpanded = categoriesExpanded.has(activeTab);
       let toShow;
       if (isExpanded) {
-        toShow = type.categories;
+        toShow = sourceCategories;
       } else {
-        const first = type.categories.slice(0, CATEGORIES_SHOW_LIMIT);
-        const selectedBeyond = type.categories.slice(CATEGORIES_SHOW_LIMIT).filter(c => selected.has(c.id));
+        const first = sourceCategories.slice(0, CATEGORIES_SHOW_LIMIT);
+        const selectedBeyond = sourceCategories.slice(CATEGORIES_SHOW_LIMIT).filter(c => selected.has(c.id));
         toShow = [...first, ...selectedBeyond];
       }
-      const hasMore = type.categories.length > CATEGORIES_SHOW_LIMIT;
+      const hasMore = sourceCategories.length > CATEGORIES_SHOW_LIMIT;
 
       for (const cat of toShow) {
         const isActive = selected.has(cat.id);
@@ -1481,6 +1504,15 @@
       }
       html += '</div></div>';
       document.getElementById('actionTypesContainer').innerHTML = html;
+      const newTabs = document.querySelector('#actionTypesContainer .action-tabs-scroll');
+      if (newTabs) newTabs.scrollLeft = tabsScrollLeft;
+      const newPanel = document.querySelector('#actionTypesContainer .action-category-panel');
+      if (newPanel) {
+        newPanel.scrollTop = panelScrollByTab.get(activeTab) || 0;
+        newPanel.addEventListener('scroll', () => {
+          panelScrollByTab.set(activeTab, newPanel.scrollTop);
+        }, { passive: true });
+      }
 
       document.querySelectorAll('.action-tab').forEach(tab => {
         tab.addEventListener('click', () => setActiveTab(tab.dataset.tab));
