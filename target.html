@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Set Your Goal — Baseline Score</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-black: #040404;
+  --bg-card: #0C0C0C;
+  --bg-elevated: #121212;
+  --red-violet: #CA0F88;
+  --electric-blue: #4900FF;
+  --royal-purple: #5C05A5;
+  --neon-mint: #71F0FF;
+  --off-white: #F1F3F6;
+  --text-primary: #F1F3F6;
+  --text-secondary: rgba(241, 243, 246, 0.75);
+  --text-muted: rgba(241, 243, 246, 0.5);
+  --border-subtle: rgba(241, 243, 246, 0.08);
+  --border-default: rgba(241, 243, 246, 0.15);
+  --gradient-main: linear-gradient(135deg, #CA0F88 0%, #5C05A5 50%, #4900FF 100%);
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,.4);
+  --transition: 240ms cubic-bezier(.4,0,.2,1);
+  --green: #22C55E;
+  --compromised: #DC2626;
+  --struggling: #EA580C;
+  --stable: #D97706;
+  --healthy: #0D9488;
+  --elite: #7C3AED;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-black);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── App Shell ─── */
+.app-shell {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 40px;
+}
+
+/* ─── Header ─── */
+.header {
+  background: var(--gradient-main);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-back {
+  background: rgba(255,255,255,.18);
+  border: none;
+  border-radius: var(--radius-full);
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.header-back:hover { background: rgba(255,255,255,.28); }
+.header-title { color: white; font-size: 17px; font-weight: 700; flex: 1; }
+.header-user { display: flex; align-items: center; gap: 6px; }
+.user-avatar {
+  width: 34px; height: 34px;
+  border-radius: var(--radius-full);
+  background: rgba(255,255,255,.22);
+  border: 2px solid rgba(255,255,255,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: white;
+  cursor: pointer;
+  position: relative;
+}
+.user-avatar:hover { background: rgba(255,255,255,.32); }
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  min-width: 200px;
+  z-index: 200;
+  display: none;
+}
+.user-dropdown.open { display: block; animation: dropDown 160ms ease; }
+@keyframes dropDown { from { opacity:0; transform:translateY(-6px) } to { opacity:1; transform:none } }
+.user-option {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px;
+  cursor: pointer;
+  transition: background var(--transition);
+  color: var(--text-primary);
+}
+.user-option:hover { background: rgba(255,255,255,.05); }
+.user-option.active { background: rgba(113,240,255,.08); }
+.user-option-avatar {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: white;
+}
+.user-option-info { flex: 1; }
+.user-option-name { font-size: 13px; font-weight: 600; color: var(--off-white); }
+.user-option-score { font-size: 11px; color: var(--text-muted); }
+.user-option-tick { font-size: 14px; color: var(--neon-mint); display: none; }
+.user-option.active .user-option-tick { display: block; }
+
+/* ─── Page Content ─── */
+.page { padding: 16px; flex: 1; }
+
+/* ─── Card Base ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* ─── SET TARGET Section ─── */
+.target-card { padding: 24px 20px; }
+.target-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+.target-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+}
+.target-score-big {
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--off-white);
+  line-height: 1;
+}
+.target-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.target-delta {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: 20px;
+}
+.target-delta.zero { color: var(--text-muted); }
+.target-delta.negative { color: #FCA5A5; }
+
+/* Slider */
+.slider-wrap { position: relative; padding: 4px 0; margin-bottom: 20px; }
+input[type=range] {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: var(--radius-full);
+  outline: none;
+  cursor: pointer;
+  background: var(--border-default);
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--off-white);
+  border: 3px solid var(--bg-card);
+  box-shadow: 0 2px 8px rgba(0,0,0,.5);
+  cursor: pointer;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  box-shadow: 0 2px 16px rgba(0,0,0,.7);
+  transform: scale(1.1);
+}
+
+
+/* ─── REQUIRED ACTIONS Section ─── */
+.actions-section { margin-top: 16px; }
+.actions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 20px 20px 16px;
+}
+.actions-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+}
+.actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 20px 20px;
+}
+
+/* Action Card */
+.action-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+.action-card:hover {
+  border-color: var(--border-default);
+  background: rgba(255,255,255,.03);
+}
+.action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: rgba(241,243,246,.06);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.action-body { flex: 1; min-width: 0; }
+.action-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--off-white);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.action-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.action-pts {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green);
+  margin-top: 4px;
+}
+.action-arrow {
+  font-size: 14px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* ─── Detail Overlay ─── */
+.detail-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bg-black);
+  z-index: 500;
+  transform: translateX(100%);
+  transition: transform 300ms cubic-bezier(.4,0,.2,1);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.detail-overlay.open {
+  transform: translateX(0);
+}
+.detail-header {
+  background: var(--gradient-main);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 501;
+}
+.detail-back {
+  background: rgba(255,255,255,.18);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+}
+.detail-back:hover { background: rgba(255,255,255,.28); }
+.detail-title {
+  color: white;
+  font-size: 17px;
+  font-weight: 700;
+  flex: 1;
+}
+.detail-body {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 16px 60px;
+}
+.detail-hero {
+  text-align: center;
+  padding: 24px 0 20px;
+}
+.detail-hero-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+.detail-hero-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--off-white);
+  margin-bottom: 8px;
+}
+.detail-hero-tags {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.detail-tag {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(241,243,246,.06);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+.detail-section {
+  margin-top: 20px;
+}
+.detail-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.detail-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.detail-section-pill {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--neon-mint);
+  background: rgba(113,240,255,.08);
+  border-radius: var(--radius-full);
+  padding: 4px 10px;
+}
+.detail-impact-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  text-align: center;
+}
+.detail-impact-pts {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--green);
+  line-height: 1;
+}
+.detail-impact-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.detail-impact-range {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.detail-impact-from { color: var(--text-secondary); }
+.detail-impact-arrow { color: var(--text-muted); font-size: 18px; }
+.detail-impact-to { color: var(--green); }
+.detail-band-change {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.detail-bm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.detail-bm-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid rgba(113,240,255,.28);
+  border-radius: 999px;
+  padding: 14px 20px;
+}
+.detail-bm-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(113,240,255,.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+  font-size: 16px;
+  color: var(--neon-mint);
+}
+.detail-bm-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.detail-bm-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--off-white);
+}
+.detail-bm-category {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.detail-bm-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+}
+.detail-bm-target-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--neon-mint);
+}
+.detail-bm-target-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--off-white);
+}
+.detail-desc-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+.detail-subcats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.detail-subcat {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(113,240,255,.08);
+  color: var(--neon-mint);
+  border: 1px solid rgba(113,240,255,.15);
+}
+.detail-protocol-section {
+  margin-top: 20px;
+}
+.detail-protocol-group {
+  margin-bottom: 16px;
+}
+.detail-protocol-group:last-child {
+  margin-bottom: 0;
+}
+.detail-protocol-title {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+.detail-protocol-card-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.detail-protocol-card {
+  flex: 1 1 48%;
+  min-width: 0;
+  background: var(--bg-elevated);
+  border-radius: 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+}
+.detail-protocol-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--off-white);
+  margin-bottom: 2px;
+}
+.detail-protocol-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Empty state */
+.empty-state {
+  padding: 32px 20px;
+  text-align: center;
+}
+.empty-state-icon { font-size: 32px; margin-bottom: 8px; }
+.empty-state-text { font-size: 14px; color: var(--text-muted); }
+
+/* ─── Toast ─── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--off-white);
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-md);
+  z-index: 9999;
+  transition: transform 300ms cubic-bezier(.4,0,.2,1);
+  max-width: 90vw;
+  text-align: center;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ─── Animations ─── */
+.animate-in {
+  animation: fadeSlideUp 320ms cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ─── Responsive Desktop ─── */
+@media (min-width: 768px) {
+  .app-shell { max-width: 720px; }
+  .page { padding: 24px; }
+  .target-card { padding: 32px 28px; }
+  .target-score-big { font-size: 56px; }
+  .actions-list { gap: 12px; }
+  .action-card { padding: 20px; }
+  .action-name { font-size: 16px; }
+}
+
+@media (min-width: 1024px) {
+  .app-shell {
+    max-width: none;
+  }
+  .page {
+    padding: 32px 48px;
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 24px;
+    align-items: flex-start;
+  }
+  .card.target-card,
+  .card.actions-section {
+    margin: 0;
+    box-shadow: var(--shadow-md);
+  }
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Header -->
+  <header class="header">
+    <a href="index.html" class="header-back" title="Back">&#8592;</a>
+    <div class="header-title">Set Your Goal</div>
+    <div class="header-user" style="position:relative">
+      <div class="user-avatar" id="userAvatarBtn" onclick="toggleUserDropdown()">AJ</div>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-option active" data-uid="0" onclick="switchUser(0)">
+          <div class="user-option-avatar" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">AJ</div>
+          <div class="user-option-info">
+            <div class="user-option-name">Arjun</div>
+            <div class="user-option-score">63.7 · Stable</div>
+          </div>
+          <div class="user-option-tick">&#10003;</div>
+        </div>
+        <div class="user-option" data-uid="1" onclick="switchUser(1)">
+          <div class="user-option-avatar" style="background:linear-gradient(135deg,#0D9488,#0891B2)">PR</div>
+          <div class="user-option-info">
+            <div class="user-option-name">Priya</div>
+            <div class="user-option-score">80.0 · Healthy</div>
+          </div>
+          <div class="user-option-tick">&#10003;</div>
+        </div>
+        <div class="user-option" data-uid="2" onclick="switchUser(2)">
+          <div class="user-option-avatar" style="background:linear-gradient(135deg,#7C3AED,#DB2777)">RA</div>
+          <div class="user-option-info">
+            <div class="user-option-name">Rahul</div>
+            <div class="user-option-score">87.0 · Elite</div>
+          </div>
+          <div class="user-option-tick">&#10003;</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page -->
+  <div class="page">
+
+    <!-- SET TARGET Card -->
+    <div class="card target-card animate-in">
+      <div class="target-header">
+        <div>
+          <div class="target-label">Set Target</div>
+          <div class="target-subtitle">How much do you want to improve?</div>
+        </div>
+        <div style="text-align:right">
+          <div class="target-score-big" id="targetScoreDisplay">71</div>
+          <div class="target-delta" id="targetDelta">+7.3 pts</div>
+        </div>
+      </div>
+
+      <div class="slider-wrap">
+        <input type="range" id="targetSlider" min="1" max="99" value="71" step="1">
+      </div>
+
+    </div>
+
+    <!-- REQUIRED ACTIONS Card -->
+    <div class="card actions-section animate-in" style="animation-delay:80ms">
+      <div class="actions-header">
+        <div class="actions-title">Required Actions</div>
+      </div>
+      <div class="actions-list" id="actionsList">
+        <!-- Action cards rendered by JS -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Detail Overlay -->
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-header">
+    <button class="detail-back" onclick="closeDetail()">&#8592; Back</button>
+    <div class="detail-title">Action Details</div>
+  </div>
+  <div class="detail-body" id="detailContent"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════
+   DATA
+════════════════════════════════════════════ */
+
+const USERS = [
+  {
+    id: 0, name: 'Arjun', initials: 'AJ',
+    avatarGrad: 'linear-gradient(135deg,#4F46E5,#7C3AED)',
+    score: 63.7, potential: 75.7, percentile: 68,
+    bandIdx: 2,
+    negativeContributors: [
+      { name: 'Vitamin D', status: 'Severely Low', contribution: 18 },
+      { name: 'Sleep Quality', status: 'Poor', contribution: 14 },
+      { name: 'HDL Cholesterol', status: 'Below optimal', contribution: 11 },
+      { name: 'VO2 Max', status: 'Below average', contribution: 9 }
+    ]
+  },
+  {
+    id: 1, name: 'Priya', initials: 'PR',
+    avatarGrad: 'linear-gradient(135deg,#0D9488,#0891B2)',
+    score: 80.0, potential: 88.0, percentile: 82,
+    bandIdx: 3,
+    negativeContributors: [
+      { name: 'Stress / Cortisol', status: 'Elevated', contribution: 10 },
+      { name: 'VO2 Max', status: 'Average', contribution: 7 },
+      { name: 'Sleep Duration', status: 'Slightly low', contribution: 5 }
+    ]
+  },
+  {
+    id: 2, name: 'Rahul', initials: 'RA',
+    avatarGrad: 'linear-gradient(135deg,#7C3AED,#DB2777)',
+    score: 87.0, potential: 94.0, percentile: 91,
+    bandIdx: 4,
+    negativeContributors: [
+      { name: 'Homocysteine', status: 'Slightly elevated', contribution: 5 },
+      { name: 'Vitamin B12', status: 'Low-normal', contribution: 4 }
+    ]
+  }
+];
+
+const BANDS = [
+  { max: 39,  label: 'Compromised', cls: 'band-compromised', color: '#DC2626', idx: 0 },
+  { max: 54,  label: 'Struggling',  cls: 'band-struggling',  color: '#EA580C', idx: 1 },
+  { max: 69,  label: 'Stable',      cls: 'band-stable',      color: '#D97706', idx: 2 },
+  { max: 84,  label: 'Healthy',     cls: 'band-healthy',     color: '#0D9488', idx: 3 },
+  { max: 100, label: 'Elite',       cls: 'band-elite',       color: '#7C3AED', idx: 4 }
+];
+
+const ACTION_CATALOGUE = [
+  {
+    id: 'supplements',
+    label: 'Take Vitamin D + Magnesium',
+    icon: '💊',
+    category: 'Supplements',
+    baseImpact: 4.2,
+    difficulty: 'easy',
+    timeframe: '2 weeks',
+    desc: 'Vitamin D corrects deficiency (key driver of your score drop). Magnesium synergises for +0.8 pts.',
+    biomarkers: [
+      { name: 'Vitamin D', category: 'Metabolic', from: 'Very Low', to: 'Optimal', fromCls: 'low' },
+      { name: 'Magnesium', category: 'Minerals', from: 'Low-normal', to: 'Normal', fromCls: 'neutral' }
+    ],
+    relevance: { 0: 1.0, 1: 0.4, 2: 0.2 },
+    subcategories: ['Vitamin D', 'Magnesium', 'Zinc', 'Omega-3'],
+    protocols: [
+      {
+        label: 'Supplements',
+        items: [
+          {
+            name: 'Vegan Omega-3 Oil',
+            meta: '12 weeks · Daily · 1 ml after dinner'
+          },
+          {
+            name: 'D3 Rise 60K Softgel Capsule',
+            meta: '12 weeks · Weekly · 1 capsule after breakfast'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'sleep',
+    label: 'Improve Sleep Consistency',
+    icon: '😴',
+    category: 'Sleep',
+    baseImpact: 3.5,
+    difficulty: 'moderate',
+    timeframe: '3 weeks',
+    desc: 'Consistent 7-8 hrs directly improves Sleep Quality score, Cortisol and HRV.',
+    biomarkers: [
+      { name: 'Sleep Quality', category: 'Sleep', from: 'Poor', to: 'Good', fromCls: 'low' },
+      { name: 'Cortisol', category: 'Stress', from: 'High', to: 'Normal', fromCls: 'low' },
+      { name: 'HRV', category: 'Recovery', from: 'Low', to: 'Average', fromCls: 'low' }
+    ],
+    relevance: { 0: 1.0, 1: 0.7, 2: 0.3 },
+    subcategories: ['Sleep Protocol', 'Improve REM', 'Deep Sleep']
+  },
+  {
+    id: 'food',
+    label: 'Anti-inflammatory Diet',
+    icon: '🥗',
+    category: 'Diet',
+    baseImpact: 3.8,
+    difficulty: 'moderate',
+    timeframe: '1 month',
+    desc: 'Mediterranean-style eating raises HDL Cholesterol and reduces Triglycerides.',
+    biomarkers: [
+      { name: 'HDL Cholesterol', category: 'Lipids', from: 'Below Optimal', to: 'Optimal', fromCls: 'neutral' },
+      { name: 'Triglycerides', category: 'Lipids', from: 'Borderline', to: 'Normal', fromCls: 'neutral' },
+      { name: 'Blood Glucose', category: 'Metabolic', from: 'Normal', to: 'Optimal', fromCls: 'neutral' }
+    ],
+    relevance: { 0: 1.0, 1: 0.6, 2: 0.4 },
+    subcategories: ['Anti-inflammatory', 'Antioxidant', 'High Fiber', 'Low Glycemic']
+  },
+  {
+    id: 'endurance',
+    label: 'Zone 2 Cardio (3x/week)',
+    icon: '🏃',
+    category: 'Exercise',
+    baseImpact: 3.0,
+    difficulty: 'moderate',
+    timeframe: '6 weeks',
+    desc: 'Raises VO2 Max and HDL. 30-min brisk walk or cycling at conversational pace.',
+    biomarkers: [
+      { name: 'VO2 Max', category: 'Cardiorespiratory', from: 'Below Average', to: 'Average', fromCls: 'low' },
+      { name: 'HDL Cholesterol', category: 'Lipids', from: 'Below Optimal', to: 'Optimal', fromCls: 'neutral' },
+      { name: 'Blood Pressure', category: 'Cardio', from: 'Normal', to: 'Optimal', fromCls: 'neutral' }
+    ],
+    relevance: { 0: 0.9, 1: 0.8, 2: 0.5 },
+    subcategories: ['Endurance', 'Zone 2 Training'],
+    protocols: [
+      {
+        label: 'Exercise – Endurance',
+        items: [
+          {
+            name: 'Active commuting (walk / bike)',
+            meta: 'Short trips · 15–20 min each way'
+          },
+          {
+            name: 'Daily step goal',
+            meta: '7k–8k steps per day'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'strength',
+    label: 'Strength Training (2x/week)',
+    icon: '🏋️',
+    category: 'Exercise',
+    baseImpact: 3.2,
+    difficulty: 'moderate',
+    timeframe: '6 weeks',
+    desc: 'Builds lean mass, improves insulin sensitivity and bone density.',
+    biomarkers: [
+      { name: 'Testosterone', category: 'Hormones', from: 'Low-normal', to: 'Normal', fromCls: 'neutral' },
+      { name: 'BMI / Body Fat', category: 'Composition', from: 'Normal', to: 'Optimal', fromCls: 'neutral' },
+      { name: 'Bone Density', category: 'Musculoskeletal', from: 'Average', to: 'Good', fromCls: 'neutral' }
+    ],
+    relevance: { 0: 0.7, 1: 0.5, 2: 0.6 },
+    subcategories: ['Strength Training', 'Resistance'],
+    protocols: [
+      {
+        label: 'Exercise – Strength',
+        items: [
+          {
+            name: 'Full‑body strength session',
+            meta: '2x / week · 30–40 min'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'stress',
+    label: 'Daily Stress Management',
+    icon: '🧘',
+    category: 'Lifestyle',
+    baseImpact: 2.5,
+    difficulty: 'easy',
+    timeframe: '2 weeks',
+    desc: '10 min meditation or breathwork per day lowers Cortisol and improves HRV.',
+    biomarkers: [
+      { name: 'Cortisol', category: 'Stress', from: 'Elevated', to: 'Normal', fromCls: 'low' },
+      { name: 'HRV', category: 'Recovery', from: 'Low', to: 'Average', fromCls: 'low' },
+      { name: 'Blood Pressure', category: 'Cardio', from: 'Normal', to: 'Optimal', fromCls: 'neutral' }
+    ],
+    relevance: { 0: 0.6, 1: 1.0, 2: 0.3 },
+    subcategories: ['Fix Stress', 'Improve HRV', 'Meditation']
+  },
+  {
+    id: 'stop_alcohol',
+    label: 'Reduce / Stop Alcohol',
+    icon: '🚫',
+    category: 'Lifestyle',
+    baseImpact: 2.8,
+    difficulty: 'hard',
+    timeframe: '1 month',
+    desc: 'Significantly improves Liver Enzymes, Sleep Quality and Triglycerides.',
+    biomarkers: [
+      { name: 'Liver Enzymes (ALT)', category: 'Liver', from: 'Elevated', to: 'Normal', fromCls: 'low' },
+      { name: 'Sleep Quality', category: 'Recovery', from: 'Poor', to: 'Good', fromCls: 'low' },
+      { name: 'Triglycerides', category: 'Lipids', from: 'Borderline', to: 'Normal', fromCls: 'neutral' }
+    ],
+    relevance: { 0: 0.5, 1: 0.4, 2: 0.2 },
+    subcategories: ['Stop Alcohol', 'Liver Recovery']
+  },
+  {
+    id: 'stop_smoking',
+    label: 'Stop Smoking',
+    icon: '🚭',
+    category: 'Lifestyle',
+    baseImpact: 4.5,
+    difficulty: 'hard',
+    timeframe: '3 months',
+    desc: 'Single highest-impact action. Improves Lung Function, Blood Pressure, Heart Rate.',
+    biomarkers: [
+      { name: 'Lung Function', category: 'Lungs', from: 'Reduced', to: 'Normal', fromCls: 'low' },
+      { name: 'Blood Pressure', category: 'Cardio', from: 'High-normal', to: 'Optimal', fromCls: 'neutral' },
+      { name: 'Heart Rate', category: 'Cardio', from: 'Elevated', to: 'Normal', fromCls: 'neutral' }
+    ],
+    relevance: { 0: 0.3, 1: 0.2, 2: 0.1 },
+    subcategories: ['Stop Smoking', 'Lung Recovery']
+  },
+  {
+    id: 'yoga',
+    label: 'Yoga (3x/week)',
+    icon: '🧘‍♀️',
+    category: 'Exercise',
+    baseImpact: 2.0,
+    difficulty: 'easy',
+    timeframe: '3 weeks',
+    desc: 'Combines flexibility, stress reduction and light cardio for holistic benefit.',
+    biomarkers: [
+      { name: 'Flexibility / Mobility', category: 'Mobility', from: 'Low', to: 'Improved', fromCls: 'neutral' },
+      { name: 'Cortisol', category: 'Stress', from: 'Elevated', to: 'Normal', fromCls: 'low' },
+      { name: 'Sleep Quality', category: 'Sleep', from: 'Poor', to: 'Good', fromCls: 'low' }
+    ],
+    relevance: { 0: 0.5, 1: 0.7, 2: 0.4 },
+    subcategories: ['Flexibility', 'Balance', 'Mind-Body']
+  },
+  {
+    id: 'hydration',
+    label: '2.5L Water Daily',
+    icon: '💧',
+    category: 'Diet',
+    baseImpact: 1.4,
+    difficulty: 'easy',
+    timeframe: '1 week',
+    desc: 'Improves kidney function markers, skin health, and energy levels.',
+    biomarkers: [
+      { name: 'Kidney Function (eGFR)', category: 'Kidney', from: 'Normal', to: 'Optimal', fromCls: 'neutral' },
+      { name: 'Energy / Fatigue', category: 'Energy', from: 'Low', to: 'Better', fromCls: 'neutral' }
+    ],
+    relevance: { 0: 0.4, 1: 0.4, 2: 0.3 },
+    subcategories: ['Hydration', 'Kidney Health']
+  }
+];
+
+const DIMINISHING = 0.82;
+const MAX_DELTA = 14.0;
+
+/* ════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════ */
+
+const state = {
+  userId: 0,
+  targetScore: 71,
+  committed: new Set()
+};
+
+/* ════════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════════ */
+
+function getUser() { return USERS[state.userId]; }
+
+function getBand(score) {
+  for (const b of BANDS) if (score <= b.max) return b;
+  return BANDS[BANDS.length - 1];
+}
+
+function getImpactForUser(action) {
+  const w = action.relevance[state.userId] || 0;
+  return Math.round(action.baseImpact * w * 10) / 10;
+}
+
+function calcProjectedScore(committedIds) {
+  const user = getUser();
+  if (committedIds.size === 0) return user.score;
+  const actions = ACTION_CATALOGUE.filter(a => committedIds.has(a.id))
+    .map(a => ({ ...a, effectiveImpact: getImpactForUser(a) }))
+    .sort((a, b) => b.effectiveImpact - a.effectiveImpact);
+  let total = 0, factor = 1.0;
+  for (const a of actions) {
+    total += a.effectiveImpact * factor;
+    factor *= DIMINISHING;
+  }
+  total = Math.min(total, MAX_DELTA);
+  return Math.min(99, Math.round((user.score + total) * 10) / 10);
+}
+
+function getActionsForGoal() {
+  return ACTION_CATALOGUE
+    .map(a => ({ ...a, effectiveImpact: getImpactForUser(a) }))
+    .filter(a => a.effectiveImpact > 0.3)
+    .sort((a, b) => b.effectiveImpact - a.effectiveImpact);
+}
+
+/* ════════════════════════════════════════════
+   RENDER
+════════════════════════════════════════════ */
+
+function render() {
+  const user = getUser();
+  const target = state.targetScore;
+  const gap = target - user.score;
+
+  // Target display
+  document.getElementById('targetScoreDisplay').textContent = target;
+
+  const deltaEl = document.getElementById('targetDelta');
+  if (gap > 0) {
+    deltaEl.textContent = `+${gap.toFixed(1)} pts`;
+    deltaEl.className = 'target-delta';
+  } else if (gap < 0) {
+    deltaEl.textContent = `${gap.toFixed(1)} pts`;
+    deltaEl.className = 'target-delta negative';
+  } else {
+    deltaEl.textContent = '0 pts';
+    deltaEl.className = 'target-delta zero';
+  }
+
+  // Slider style
+  const band = getBand(target);
+  const pct = (target - 1) / 98 * 100;
+  document.getElementById('targetSlider').style.background =
+    `linear-gradient(90deg, ${band.color} ${pct}%, rgba(241,243,246,0.12) ${pct}%)`;
+
+  // Actions
+  renderActions();
+}
+
+function renderActions() {
+  const user = getUser();
+  const target = state.targetScore;
+  const gap = Math.max(0, target - user.score);
+  const actions = getActionsForGoal();
+  const container = document.getElementById('actionsList');
+
+  if (gap <= 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🎯</div>
+        <div class="empty-state-text">You're already at or above this target! Raise the bar.</div>
+      </div>`;
+    return;
+  }
+
+  // Find minimal set of actions to close the gap
+  let simSet = new Set(), simScore = user.score;
+  const neededActions = [];
+  for (const a of actions) {
+    if (simScore >= target) break;
+    const proj = calcProjectedScore(new Set([...simSet, a.id]));
+    if (proj > simScore) {
+      simSet.add(a.id);
+      simScore = proj;
+      neededActions.push(a);
+    }
+  }
+
+
+  if (neededActions.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">⚠️</div>
+        <div class="empty-state-text">No clear path to this target. Try a lower goal.</div>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = neededActions.map((action, idx) => {
+    const bioNames = action.biomarkers.slice(0, 2).map(b => b.name).join(', ');
+    return `
+      <div class="action-card" onclick="openDetail('${action.id}')">
+        <div class="action-icon">${action.icon}</div>
+        <div class="action-body">
+          <div class="action-name">${action.label}</div>
+          <div class="action-desc">Improves ${bioNames}</div>
+          <div class="action-pts">+${action.effectiveImpact.toFixed(1)} pts</div>
+        </div>
+        <div class="action-arrow">&#8250;</div>
+      </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════════
+   INTERACTIONS
+════════════════════════════════════════════ */
+
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+function buildActionInsight(action, impact) {
+  const bmNames = (action.biomarkers || []).map(b => b.name);
+  if (!bmNames.length) return action.desc || '';
+
+  const joined = bmNames.length === 1
+    ? bmNames[0]
+    : bmNames.slice(0, -1).join(', ') + ' and ' + bmNames[bmNames.length - 1];
+
+  const pointsText = `${impact.toFixed(1)} point${impact.toFixed(1) === '1.0' ? '' : 's'}`;
+
+  return `Our algorithm looks at your current health profile. Focusing on this action will help improve ${joined}. Together, these changes are projected to increase your Baseline Score by about ${pointsText}.`;
+}
+
+function openDetail(actionId) {
+  const action = ACTION_CATALOGUE.find(a => a.id === actionId);
+  if (!action) return;
+  const user = getUser();
+  const impact = getImpactForUser(action);
+  const bmCount = (action.biomarkers || []).length;
+  const currentScore = user.score;
+  const projectedScore = Math.min(99, Math.round((currentScore + impact) * 10) / 10);
+  const currentBand = getBand(currentScore);
+  const projectedBand = getBand(projectedScore);
+
+  const bmHtml = action.biomarkers.map(bm => `
+    <div class="detail-bm-item">
+      <div class="detail-bm-icon">↗</div>
+      <div class="detail-bm-main">
+        <div class="detail-bm-name">${bm.name}</div>
+        ${bm.category ? `<div class="detail-bm-category">${bm.category}</div>` : ''}
+      </div>
+      <div class="detail-bm-right">
+        <div class="detail-bm-target-label">Target</div>
+        <div class="detail-bm-target-value">${bm.to}</div>
+      </div>
+    </div>`).join('');
+
+  const subcatHtml = (action.subcategories || []).map(s =>
+    `<span class="detail-subcat">${s}</span>`).join('');
+
+  const bandChangeHtml = currentBand.label !== projectedBand.label
+    ? `<div class="detail-band-change">
+        <span style="color:${currentBand.color}">${currentBand.label}</span>
+        <span style="color:var(--text-muted)"> &#8594; </span>
+        <span style="color:${projectedBand.color}">${projectedBand.label}</span>
+      </div>`
+    : '';
+
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-hero">
+      <div class="detail-hero-icon">${action.icon}</div>
+      <div class="detail-hero-name">${action.label}</div>
+      <div class="detail-hero-tags">
+        <span class="detail-tag">${capitalize(action.difficulty)}</span>
+        <span class="detail-tag">${action.timeframe}</span>
+        <span class="detail-tag">${action.category}</span>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title">Score Impact</div>
+      <div class="detail-impact-card">
+        <div class="detail-impact-pts">+${impact.toFixed(1)}</div>
+        <div class="detail-impact-label">points increase</div>
+        <div class="detail-impact-range">
+          <span class="detail-impact-from">${currentScore}</span>
+          <span class="detail-impact-arrow">&#8594;</span>
+          <span class="detail-impact-to">${projectedScore}</span>
+        </div>
+        ${bandChangeHtml}
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-header">
+        <div class="detail-section-title">Biomarkers Affected</div>
+        ${bmCount ? `<div class="detail-section-pill">${bmCount} improvements</div>` : ''}
+      </div>
+      <div class="detail-bm-list">${bmHtml}</div>
+    </div>
+
+    ${(action.protocols && action.protocols.length) ? `
+    <div class="detail-section detail-protocol-section">
+      <div class="detail-section-title">Actions Involved</div>
+      ${action.protocols.map(group => `
+        <div class="detail-protocol-group">
+          <div class="detail-protocol-title">${group.label}</div>
+          <div class="detail-protocol-card-row">
+            ${group.items.map(item => `
+              <div class="detail-protocol-card">
+                <div class="detail-protocol-name">${item.name}</div>
+                <div class="detail-protocol-meta">${item.meta}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>` : ''}
+
+    ${subcatHtml ? `
+    <div class="detail-section">
+      <div class="detail-section-title">Related Areas</div>
+      <div class="detail-subcats">${subcatHtml}</div>
+    </div>` : ''}
+
+    <div class="detail-section">
+      <div class="detail-section-title">What This Action Does</div>
+      <div class="detail-desc-text">${buildActionInsight(action, impact)}</div>
+    </div>
+  `;
+
+  document.getElementById('detailOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function setTarget(val) {
+  val = parseInt(val);
+  if (isNaN(val)) return;
+  if (val >= 100) val = 99;
+  if (val < 1) val = 1;
+  state.targetScore = val;
+  document.getElementById('targetSlider').value = val;
+  render();
+}
+
+// Slider
+document.getElementById('targetSlider').addEventListener('input', function() {
+  setTarget(parseInt(this.value));
+});
+
+// User switcher
+function toggleUserDropdown() {
+  document.getElementById('userDropdown').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.header-user')) {
+    document.getElementById('userDropdown').classList.remove('open');
+  }
+});
+
+function switchUser(uid) {
+  state.userId = uid;
+  state.committed.clear();
+  const user = USERS[uid];
+
+  const btn = document.getElementById('userAvatarBtn');
+  btn.textContent = user.initials;
+
+  const defaultTarget = Math.min(99, Math.round(user.score) + 10);
+  state.targetScore = defaultTarget;
+  document.getElementById('targetSlider').value = defaultTarget;
+
+  document.querySelectorAll('.user-option').forEach((el, i) => {
+    el.classList.toggle('active', i === uid);
+  });
+
+  document.getElementById('userDropdown').classList.remove('open');
+  render();
+  showToast(`Switched to ${user.name}`);
+}
+
+/* ─── Toast ─── */
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+/* ════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════ */
+
+window.addEventListener('DOMContentLoaded', () => {
+  const user = getUser();
+  const defaultTarget = Math.min(99, Math.round(user.score) + 7);
+  state.targetScore = defaultTarget;
+  document.getElementById('targetSlider').value = defaultTarget;
+  render();
+});
+</script>
+</body>
+</html>
