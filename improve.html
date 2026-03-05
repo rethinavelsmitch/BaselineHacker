@@ -223,6 +223,12 @@
       color: var(--text-muted);
       animation: none;
     }
+    .ctx-weeks {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      line-height: 1;
+    }
 
     .band-progress-row {
       display: flex;
@@ -1025,7 +1031,7 @@
   <!-- Header -->
   <header class="app-header">
     <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
-    <span class="header-title">⚡ Improve</span>
+    <span class="header-title">Improve Score</span>
     <div class="streak-badge" id="headerStreak">🔥 3 days</div>
   </header>
 
@@ -1042,6 +1048,7 @@
           <span class="ctx-new" id="ctxNew">63.7</span>
           <div class="ctx-delta-col">
             <span class="delta-pill zero" id="ctxDelta">+0.0</span>
+            <span class="ctx-weeks" id="ctxWeeks">0 weeks</span>
           </div>
         </div>
         <div class="band-progress-row">
@@ -1490,12 +1497,16 @@
       newEl.style.color = getInferenceColor(score);
 
       const deltaEl = document.getElementById('ctxDelta');
+      const weeksEl = document.getElementById('ctxWeeks');
       if (delta > 0) {
         deltaEl.textContent = '+' + delta.toFixed(1);
         deltaEl.className = 'delta-pill';
+        const weeks = Math.max(2, Math.min(16, Math.round(delta * 0.65)));
+        weeksEl.textContent = `${weeks} week${weeks > 1 ? 's' : ''}`;
       } else {
         deltaEl.textContent = '+0.0';
         deltaEl.className = 'delta-pill zero';
+        weeksEl.textContent = '0 weeks';
       }
 
       // Progress bar: score out of 100 (max 100%)
