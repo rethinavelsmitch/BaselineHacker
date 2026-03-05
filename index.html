@@ -831,26 +831,44 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* ─── Mobile Navigation ─── */
+    /* ─── Mobile Navigation (reference style) ─── */
     .mobile-nav {
       display: none;
       position: fixed;
       bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--bg-card);
-      border-top: 1px solid var(--border-default);
+      left: 12px;
+      right: 12px;
+      background: rgba(28, 28, 30, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px 24px 0 0;
       z-index: 100;
-      padding: 0;
-      margin: 0;
+      padding: 12px 0 24px;
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
+      box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: none;
+    }
+
+    .mobile-nav::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
     }
 
     .mobile-nav-tabs {
       display: flex;
       justify-content: space-around;
       align-items: center;
-      height: 60px;
+      height: 56px;
       width: 100%;
+      padding: 0 8px;
     }
 
     .mobile-nav-tab {
@@ -860,30 +878,57 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      padding: 8px 0;
+      padding: 10px 16px;
       cursor: pointer;
       border: none;
       background: none;
-      color: var(--text-muted);
+      color: rgba(255, 255, 255, 0.5);
       font-size: 11px;
       font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      transition: all 0.25s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       font-family: var(--font-sans);
+      border-radius: 16px;
+      position: relative;
     }
 
     .mobile-nav-tab:hover {
-      color: var(--text-secondary);
+      color: rgba(255, 255, 255, 0.8);
     }
 
     .mobile-nav-tab.active {
-      color: var(--neon-mint);
-      border-bottom: 3px solid var(--neon-mint);
+      color: rgba(255, 255, 255, 1);
+    }
+
+    .mobile-nav-tab.active::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      z-index: -1;
+    }
+
+    .mobile-nav-tab.active .mobile-nav-icon {
+      animation: navIconBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes navIconBounce {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
     }
 
     .mobile-nav-icon {
-      font-size: 20px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+    .mobile-nav-icon svg {
+      width: 100%;
+      height: 100%;
     }
 
     .mobile-content {
@@ -994,15 +1039,15 @@
   <nav class="mobile-nav">
     <div class="mobile-nav-tabs">
       <button class="mobile-nav-tab active" data-tab="home" onclick="switchTab('home')">
-        <span class="mobile-nav-icon">🏠</span>
+        <span class="mobile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
         <span>Home</span>
       </button>
       <button class="mobile-nav-tab" data-tab="intervention" onclick="switchTab('intervention')">
-        <span class="mobile-nav-icon">💊</span>
+        <span class="mobile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
         <span>Intervention</span>
       </button>
       <button class="mobile-nav-tab" data-tab="score" onclick="switchTab('score')">
-        <span class="mobile-nav-icon">📊</span>
+        <span class="mobile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
         <span>Score</span>
       </button>
     </div>
