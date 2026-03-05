@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baseline Score</title>
+<style>
+/* ─── CSS Variables & Reset ─── */
+:root {
+  --primary-500: #6366F1;
+  --primary-600: #4F46E5;
+  --primary-700: #4338CA;
+  --purple-500: #8B5CF6;
+  --purple-600: #7C3AED;
+  --gradient-main: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  --gradient-light: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
+  --gradient-ring: conic-gradient(from 0deg, #4F46E5, #7C3AED, #A78BFA);
+  --cyan-500: #06B6D4;
+  --emerald-400: #34D399;
+  --emerald-500: #10B981;
+  --amber-400: #FBBF24;
+  --amber-500: #F59E0B;
+  --orange-500: #F97316;
+  --red-500: #EF4444;
+  --slate-50: #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-300: #CBD5E1;
+  --slate-400: #94A3B8;
+  --slate-500: #64748B;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1E293B;
+  --slate-900: #0F172A;
+  --white: #FFFFFF;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
+  --shadow-glow: 0 0 20px rgba(99,102,241,0.15);
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--slate-100);
+  color: var(--slate-800);
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Layout ─── */
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+}
+
+/* ─── Header ─── */
+.app-header {
+  background: var(--gradient-main);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-header h1 {
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.header-pill {
+  background: rgba(255,255,255,0.18);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+/* ─── Section Card ─── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 16px 20px 0;
+}
+
+.card-header h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--slate-700);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-body {
+  padding: 16px 20px 20px;
+}
+
+/* ─── Score Ring ─── */
+.score-card-top {
+  background: var(--gradient-light);
+  padding: 28px 20px 20px;
+  text-align: center;
+}
+
+.score-ring-wrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 12px;
+}
+
+.score-ring-wrapper svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.score-ring-bg {
+  fill: none;
+  stroke: var(--slate-200);
+  stroke-width: 10;
+}
+
+.score-ring-fill {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 439.82;
+  stroke-dashoffset: 439.82;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.score-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.score-number {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.score-of {
+  font-size: 13px;
+  color: var(--slate-400);
+  font-weight: 500;
+}
+
+.score-band-badge {
+  display: inline-block;
+  padding: 5px 16px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.band-compromised { background: #FEE2E2; color: #DC2626; }
+.band-struggling  { background: #FFEDD5; color: #EA580C; }
+.band-stable      { background: #FEF9C3; color: #CA8A04; }
+.band-healthy     { background: #DCFCE7; color: #16A34A; }
+.band-elite       { background: #EDE9FE; color: #7C3AED; }
+
+.last-updated {
+  font-size: 12px;
+  color: var(--slate-400);
+}
+
+/* ─── Why This Score ─── */
+.why-score { padding: 20px; }
+
+.why-score h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slate-700);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.contributor-section { margin-bottom: 16px; }
+
+.contributor-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.contributor-label.negative { color: var(--red-500); }
+.contributor-label.positive { color: var(--emerald-500); }
+
+.contributor-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.contributor-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-700);
+  min-width: 100px;
+}
+
+.contributor-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--slate-100);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.contributor-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0;
+}
+
+.contributor-bar-fill.negative { background: linear-gradient(90deg, #FCA5A5, #EF4444); }
+.contributor-bar-fill.positive { background: linear-gradient(90deg, #6EE7B7, #10B981); }
+
+.contributor-pct {
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 32px;
+  text-align: right;
+}
+
+.contributor-pct.negative { color: var(--red-500); }
+.contributor-pct.positive { color: var(--emerald-500); }
+
+.contributor-detail {
+  font-size: 11px;
+  color: var(--slate-400);
+  margin-left: 110px;
+  margin-top: -4px;
+  margin-bottom: 8px;
+}
+
+/* ─── CTA Chips ─── */
+.cta-chips {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 20px;
+  flex-wrap: wrap;
+}
+
+.cta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1.5px solid var(--slate-200);
+  background: var(--white);
+  color: var(--primary-600);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.cta-chip:hover {
+  background: var(--primary-600);
+  color: var(--white);
+  border-color: var(--primary-600);
+  box-shadow: var(--shadow-glow);
+}
+
+.cta-chip:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+/* ─── Tabs ─── */
+.tabs-container {
+  display: flex;
+  background: var(--slate-100);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  margin: 16px 20px 0;
+  position: relative;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--slate-500);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-align: center;
+  line-height: 1.3;
+  position: relative;
+  z-index: 1;
+}
+
+.tab-btn.active {
+  color: var(--primary-600);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-btn:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+.tab-content {
+  display: none;
+  padding: 20px;
+  animation: fadeSlideIn 0.3s ease;
+}
+
+.tab-content.active { display: block; }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Intervention Chips ─── */
+.interventions-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.intervention-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-full);
+  background: var(--slate-50);
+  border: 1.5px solid var(--slate-200);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.intervention-chip:hover {
+  border-color: var(--primary-500);
+  background: #EEF2FF;
+}
+
+.intervention-chip.active {
+  background: linear-gradient(135deg, #EEF2FF, #F5F3FF);
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 1px var(--primary-500), var(--shadow-sm);
+}
+
+.intervention-chip:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+.chip-icon { font-size: 16px; line-height: 1; }
+
+.chip-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--slate-700);
+}
+
+.chip-toggle {
+  position: relative;
+  width: 34px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.chip-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--slate-300);
+  border-radius: var(--radius-full);
+  transition: background var(--transition-fast);
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: var(--white);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: transform var(--transition-fast);
+}
+
+.chip-toggle input:checked ~ .toggle-track {
+  background: var(--primary-500);
+}
+
+.chip-toggle input:checked ~ .toggle-thumb {
+  transform: translateX(16px);
+}
+
+.reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--slate-200);
+  background: var(--white);
+  color: var(--slate-500);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: 20px;
+}
+
+.reset-btn:hover { color: var(--red-500); border-color: var(--red-500); }
+
+/* ─── Estimated Score Display ─── */
+.estimated-score-box {
+  background: var(--gradient-light);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  text-align: center;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.estimated-score-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-main);
+}
+
+.est-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--slate-500);
+  margin-bottom: 8px;
+}
+
+.est-score-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.est-current {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--slate-400);
+}
+
+.est-arrow {
+  font-size: 18px;
+  color: var(--slate-300);
+}
+
+.est-new {
+  font-size: 32px;
+  font-weight: 800;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: all var(--transition-slow);
+}
+
+.est-delta {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  background: #DCFCE7;
+  color: #16A34A;
+  animation: pulseDelta 2s ease infinite;
+}
+
+.est-delta.zero {
+  background: var(--slate-100);
+  color: var(--slate-400);
+  animation: none;
+}
+
+@keyframes pulseDelta {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.est-band-label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* ─── Biomarkers Impacted ─── */
+.biomarkers-section h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-700);
+  margin-bottom: 10px;
+}
+
+.biomarker-list { list-style: none; }
+
+.biomarker-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--slate-100);
+  font-size: 13px;
+}
+
+.biomarker-item:last-child { border-bottom: none; }
+
+.biomarker-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.biomarker-dot.positive { background: var(--emerald-500); }
+.biomarker-dot.neutral  { background: var(--slate-300); }
+
+.biomarker-name {
+  flex: 1;
+  font-weight: 500;
+  color: var(--slate-700);
+}
+
+.biomarker-change {
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.biomarker-change.positive { color: var(--emerald-500); }
+
+/* ─── Confidence Badge ─── */
+.confidence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 14px;
+  cursor: help;
+}
+
+.confidence-high   { background: #DCFCE7; color: #16A34A; }
+.confidence-medium { background: #FEF9C3; color: #CA8A04; }
+.confidence-low    { background: #FFEDD5; color: #EA580C; }
+
+.confidence-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ─── Tab 2: Target Score ─── */
+.target-section-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-600);
+  margin-bottom: 12px;
+}
+
+.target-slider-container {
+  margin-bottom: 20px;
+}
+
+.target-value-display {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.target-big-number {
+  font-size: 48px;
+  font-weight: 800;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.target-band-label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--slate-200);
+  outline: none;
+  margin: 8px 0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradient-main);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
+  border: 3px solid var(--white);
+  transition: transform var(--transition-fast);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+input[type="range"]:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 4px;
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--slate-400);
+  font-weight: 500;
+}
+
+/* Achievability */
+.achievability-box {
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.45;
+}
+
+.achievability-box.achievable {
+  background: #DCFCE7;
+  color: #166534;
+  border: 1px solid #BBF7D0;
+}
+
+.achievability-box.stretch {
+  background: #FEF9C3;
+  color: #854D0E;
+  border: 1px solid #FDE68A;
+}
+
+.achievability-box.difficult {
+  background: #FFEDD5;
+  color: #9A3412;
+  border: 1px solid #FED7AA;
+}
+
+.achievability-box.unreachable {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+.achievability-icon { font-size: 18px; flex-shrink: 0; }
+
+/* Recommended Actions Plan */
+.action-plan { margin-bottom: 20px; }
+
+.action-plan h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-700);
+  margin-bottom: 12px;
+}
+
+.plan-action-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--slate-50);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  border: 1px solid var(--slate-100);
+}
+
+.plan-action-icon { font-size: 18px; }
+
+.plan-action-info { flex: 1; }
+
+.plan-action-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-700);
+}
+
+.plan-action-impact {
+  font-size: 11px;
+  color: var(--slate-500);
+}
+
+.plan-action-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--emerald-500);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Biomarker improvements for target */
+.biomarker-improvements { margin-bottom: 18px; }
+
+.biomarker-improvements h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-700);
+  margin-bottom: 10px;
+}
+
+.bioimp-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--slate-100);
+  font-size: 12px;
+}
+
+.bioimp-name {
+  flex: 1;
+  font-weight: 600;
+  color: var(--slate-700);
+}
+
+.bioimp-current {
+  color: var(--slate-400);
+  font-weight: 500;
+}
+
+.bioimp-arrow { color: var(--slate-300); }
+
+.bioimp-target {
+  color: var(--emerald-500);
+  font-weight: 700;
+}
+
+.bioimp-time {
+  font-size: 10px;
+  color: var(--slate-400);
+  padding: 2px 6px;
+  background: var(--slate-50);
+  border-radius: var(--radius-full);
+}
+
+/* Apply Plan Button */
+.apply-plan-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-main);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+  letter-spacing: 0.2px;
+}
+
+.apply-plan-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+}
+
+.apply-plan-btn:active { transform: translateY(0); }
+
+.apply-plan-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.apply-plan-btn:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+/* ─── Section C: Explainability ─── */
+.explainability-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+details {
+  border-bottom: 1px solid var(--slate-100);
+}
+
+details summary {
+  padding: 14px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-700);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background var(--transition-fast);
+  user-select: none;
+}
+
+details summary:hover { background: var(--slate-50); }
+
+details summary::after {
+  content: '▸';
+  font-size: 12px;
+  color: var(--slate-400);
+  transition: transform var(--transition-fast);
+}
+
+details[open] summary::after { transform: rotate(90deg); }
+
+details summary::-webkit-details-marker { display: none; }
+
+.details-content {
+  padding: 0 20px 16px;
+  font-size: 12.5px;
+  color: var(--slate-600);
+  line-height: 1.6;
+}
+
+.details-content p { margin-bottom: 8px; }
+
+.details-content ul {
+  margin-left: 16px;
+  margin-bottom: 8px;
+}
+
+.details-content li { margin-bottom: 4px; }
+
+/* Missing Data Warning */
+.missing-data-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 16px;
+  margin: 12px 20px;
+  background: #FEF9C3;
+  border: 1px solid #FDE68A;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: #854D0E;
+  line-height: 1.45;
+}
+
+.missing-data-warning .warn-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+/* Debug Drawer */
+.debug-drawer-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 12px;
+  background: var(--slate-50);
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--slate-400);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all var(--transition-fast);
+  border-top: 1px solid var(--slate-100);
+}
+
+.debug-drawer-toggle:hover { color: var(--slate-600); background: var(--slate-100); }
+
+.debug-drawer {
+  display: none;
+  padding: 16px 20px;
+  background: var(--slate-900);
+  color: #A5F3FC;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 11px;
+  line-height: 1.7;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.debug-drawer.open { display: block; }
+
+.debug-key { color: #C4B5FD; }
+.debug-val { color: #6EE7B7; }
+.debug-bracket { color: #94A3B8; }
+.debug-section {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(148,163,184,0.15);
+}
+
+/* ─── Animations ─── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: slideUp 0.5s ease both;
+}
+
+.animate-in:nth-child(1) { animation-delay: 0.05s; }
+.animate-in:nth-child(2) { animation-delay: 0.1s; }
+.animate-in:nth-child(3) { animation-delay: 0.15s; }
+.animate-in:nth-child(4) { animation-delay: 0.2s; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--slate-900);
+  color: var(--white);
+  padding: 12px 20px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ─── Responsive ─── */
+@media (min-width: 640px) {
+  .app-container {
+    max-width: 560px;
+    padding: 0 24px 40px;
+  }
+  .score-ring-wrapper {
+    width: 200px;
+    height: 200px;
+  }
+  .score-number { font-size: 48px; }
+  .interventions-grid { gap: 10px; }
+  .tab-btn { font-size: 12.5px; }
+}
+
+@media (min-width: 1024px) {
+  .app-container {
+    max-width: 720px;
+  }
+  .card-body { padding: 20px 28px 28px; }
+  .tab-content { padding: 24px 28px; }
+}
+
+/* ─── Scrollbar ─── */
+.debug-drawer::-webkit-scrollbar {
+  width: 4px;
+}
+.debug-drawer::-webkit-scrollbar-thumb {
+  background: var(--slate-600);
+  border-radius: var(--radius-full);
+}
+
+/* ─── No-selection for interactive elements ─── */
+.intervention-chip, .tab-btn, .cta-chip, .reset-btn {
+  -webkit-tap-highlight-color: transparent;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="app-header">
+  <h1>Baseline Score</h1>
+  <span class="header-pill">Dashboard</span>
+</header>
+
+<div class="app-container">
+
+  <!-- ════════ SECTION A: Core Score Card ════════ -->
+  <div class="card animate-in" id="score-card">
+    <div class="score-card-top">
+      <div class="score-ring-wrapper">
+        <svg viewBox="0 0 160 160">
+          <defs>
+            <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#4F46E5"/>
+              <stop offset="100%" stop-color="#7C3AED"/>
+            </linearGradient>
+          </defs>
+          <circle class="score-ring-bg" cx="80" cy="80" r="70"/>
+          <circle class="score-ring-fill" cx="80" cy="80" r="70" stroke="url(#scoreGrad)" id="scoreRing"/>
+        </svg>
+        <div class="score-center">
+          <div class="score-number" id="mainScoreNum">0</div>
+          <div class="score-of">/ 100</div>
+        </div>
+      </div>
+      <div id="mainBandBadge" class="score-band-badge band-stable">Stable</div>
+      <div class="last-updated" id="lastUpdated">Last updated: loading…</div>
+    </div>
+
+    <!-- Why this score -->
+    <div class="why-score" id="whySection">
+      <h3>📊 Why this score?</h3>
+      <div id="contributorsContainer"></div>
+    </div>
+
+    <!-- CTA Chips -->
+    <div class="cta-chips">
+      <button class="cta-chip" onclick="scrollToEl('whySection')">🔍 View details</button>
+      <button class="cta-chip" onclick="switchTab(1)">🎯 What to focus next</button>
+      <button class="cta-chip" onclick="switchTab(0)">⚡ Try interventions</button>
+    </div>
+  </div>
+
+  <!-- ════════ SECTION B: Mode Switch ════════ -->
+  <div class="card animate-in" id="mode-switch-card">
+    <div class="tabs-container">
+      <button class="tab-btn active" onclick="switchTab(0)" id="tabBtn0">Change Actions → New Score</button>
+      <button class="tab-btn" onclick="switchTab(1)" id="tabBtn1">Set Target → Required Actions</button>
+    </div>
+
+    <!-- Tab 1: Interventions -->
+    <div class="tab-content active" id="tabContent0">
+      <div class="interventions-grid" id="interventionsGrid"></div>
+      <button class="reset-btn" id="resetBtn" onclick="resetAll()">↺ Reset all</button>
+
+      <div class="estimated-score-box" id="estimatedBox">
+        <div class="est-label">Estimated New Score</div>
+        <div class="est-score-row">
+          <span class="est-current" id="estCurrent">63.7</span>
+          <span class="est-arrow">→</span>
+          <span class="est-new" id="estNew">63.7</span>
+        </div>
+        <span class="est-delta zero" id="estDelta">+0.0</span>
+        <div class="est-band-label" id="estBand"></div>
+      </div>
+
+      <div class="biomarkers-section" id="biomarkersSection">
+        <h4>Biomarkers Impacted</h4>
+        <ul class="biomarker-list" id="biomarkerList">
+          <li class="biomarker-item" style="color:var(--slate-400); font-size:12px;">Toggle actions above to see impacted biomarkers</li>
+        </ul>
+      </div>
+
+      <div id="confidenceBadgeContainer"></div>
+    </div>
+
+    <!-- Tab 2: Target Score -->
+    <div class="tab-content" id="tabContent1">
+      <div class="target-section-label">Set your target score</div>
+      <div class="target-slider-container">
+        <div class="target-value-display">
+          <div class="target-big-number" id="targetBigNum">63.7</div>
+          <div class="target-band-label" id="targetBandLabel"></div>
+        </div>
+        <input type="range" id="targetSlider" min="0" max="100" step="0.1" value="63.7">
+        <div class="slider-labels">
+          <span>Current: <strong id="sliderCurrentLabel">63.7</strong></span>
+          <span>Max: 100</span>
+        </div>
+      </div>
+
+      <div id="achievabilityBox" class="achievability-box achievable" style="display:none;"></div>
+
+      <div class="action-plan" id="actionPlan" style="display:none;">
+        <h4>Recommended Action Plan</h4>
+        <div id="planActionsList"></div>
+      </div>
+
+      <div class="biomarker-improvements" id="biomarkerImprovements" style="display:none;">
+        <h4>Required Biomarker Improvements</h4>
+        <div id="bioimpList"></div>
+      </div>
+
+      <button class="apply-plan-btn" id="applyPlanBtn" onclick="applyPlan()" disabled>Apply this plan</button>
+    </div>
+  </div>
+
+  <!-- ════════ SECTION C: Explainability ════════ -->
+  <div class="explainability-card animate-in">
+    <details>
+      <summary>How this estimate works</summary>
+      <div class="details-content">
+        <p>Your Baseline Score is a composite metric (0–100) derived from blood biomarkers, lifestyle data, and health indicators. Each biomarker is weighted by clinical significance and your personal variance.</p>
+        <p><strong>When you toggle interventions:</strong></p>
+        <ul>
+          <li>Each action maps to specific biomarkers it can improve.</li>
+          <li>Individual impacts are based on published clinical averages.</li>
+          <li>Combined effects use a <strong>diminishing-returns model</strong> — each additional action contributes slightly less than in isolation.</li>
+          <li>A hard cap of <strong>+12.0 points</strong> prevents unrealistic additive inflation.</li>
+          <li>Overlapping biomarker effects are de-duplicated (e.g., sleep + yoga both affect Cortisol).</li>
+        </ul>
+        <p>The confidence level decreases as more actions are combined, reflecting real-world uncertainty in multi-variable predictions.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Score band thresholds</summary>
+      <div class="details-content">
+        <ul>
+          <li><strong>0–39</strong> — Compromised</li>
+          <li><strong>40–54</strong> — Struggling</li>
+          <li><strong>55–69</strong> — Stable</li>
+          <li><strong>70–84</strong> — Healthy</li>
+          <li><strong>85–100</strong> — Elite</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Data sources & limitations</summary>
+      <div class="details-content">
+        <p>Estimates rely on population-level clinical data. Individual responses may vary based on genetics, adherence, baseline health, and other factors not captured in this model.</p>
+        <p>This is a <strong>directional planning tool</strong>, not a medical prediction. Always consult your physician before making health changes.</p>
+      </div>
+    </details>
+
+    <!-- Missing data warning -->
+    <div class="missing-data-warning" id="missingDataWarning">
+      <span class="warn-icon">⚠️</span>
+      <span><strong>2 biomarkers missing data:</strong> Testosterone and Bone Density have no recent labs. Estimates for Strength Training may be less accurate.</span>
+    </div>
+
+    <!-- Debug Drawer -->
+    <button class="debug-drawer-toggle" id="debugToggle" onclick="toggleDebug()">
+      <span>⚙</span> Debug Drawer
+    </button>
+    <div class="debug-drawer" id="debugDrawer"></div>
+  </div>
+
+</div><!-- /app-container -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════
+   DATA MODEL
+   ═══════════════════════════════════════════ */
+
+const BASELINE = {
+  score: 63.7,
+  lastUpdated: '2026-03-04T14:30:00Z',
+  contributors: {
+    negative: [
+      { name: 'Vitamin D',      contribution: 18, detail: 'Severely deficient' },
+      { name: 'Sleep Quality',   contribution: 14, detail: 'Poor consistency' },
+      { name: 'HDL Cholesterol', contribution: 11, detail: 'Below optimal' },
+      { name: 'VO2 Max',         contribution: 9,  detail: 'Below average' }
+    ],
+    positive: [
+      { name: 'Blood Glucose',   contribution: 12, detail: 'Well controlled' },
+      { name: 'Blood Pressure',  contribution: 10, detail: 'Optimal range' },
+      { name: 'BMI',             contribution: 8,  detail: 'Healthy range' }
+    ]
+  }
+};
+
+const INTERVENTIONS = [
+  {
+    id: 'supplements', label: 'Supplements', icon: '💊', baseImpact: 4.2,
+    biomarkers: [
+      { name: 'Vitamin D', improvement: 35 },
+      { name: 'Iron', improvement: 15 }
+    ]
+  },
+  {
+    id: 'food', label: 'Food', icon: '🥗', baseImpact: 3.8,
+    biomarkers: [
+      { name: 'HDL Cholesterol', improvement: 12 },
+      { name: 'Blood Glucose', improvement: 5 },
+      { name: 'Triglycerides', improvement: 10 }
+    ]
+  },
+  {
+    id: 'sleep', label: 'Sleep', icon: '😴', baseImpact: 3.5,
+    biomarkers: [
+      { name: 'Sleep Quality', improvement: 30 },
+      { name: 'Cortisol', improvement: 15 },
+      { name: 'HRV', improvement: 10 }
+    ]
+  },
+  {
+    id: 'strength', label: 'Strength Training', icon: '🏋️', baseImpact: 3.2,
+    biomarkers: [
+      { name: 'Testosterone', improvement: 12 },
+      { name: 'BMI', improvement: 5 },
+      { name: 'Bone Density', improvement: 8 }
+    ]
+  },
+  {
+    id: 'endurance', label: 'Endurance', icon: '🏃', baseImpact: 3.0,
+    biomarkers: [
+      { name: 'VO2 Max', improvement: 20 },
+      { name: 'HDL Cholesterol', improvement: 8 },
+      { name: 'Blood Pressure', improvement: 10 }
+    ]
+  },
+  {
+    id: 'stop_alcohol', label: 'Stop Alcohol', icon: '🚫', baseImpact: 2.8,
+    biomarkers: [
+      { name: 'Liver Enzymes', improvement: 25 },
+      { name: 'Sleep Quality', improvement: 10 },
+      { name: 'Triglycerides', improvement: 15 }
+    ]
+  },
+  {
+    id: 'stop_smoking', label: 'Stop Smoking', icon: '🚭', baseImpact: 4.5,
+    biomarkers: [
+      { name: 'Lung Function', improvement: 30 },
+      { name: 'Blood Pressure', improvement: 15 },
+      { name: 'Heart Rate', improvement: 10 }
+    ]
+  },
+  {
+    id: 'stress', label: 'Stress Management', icon: '🧘', baseImpact: 2.5,
+    biomarkers: [
+      { name: 'Cortisol', improvement: 20 },
+      { name: 'HRV', improvement: 15 },
+      { name: 'Blood Pressure', improvement: 5 }
+    ]
+  },
+  {
+    id: 'yoga', label: 'Yoga', icon: '🧘‍♀️', baseImpact: 2.0,
+    biomarkers: [
+      { name: 'Flexibility', improvement: 25 },
+      { name: 'Cortisol', improvement: 10 },
+      { name: 'Sleep Quality', improvement: 8 }
+    ]
+  }
+];
+
+const BAND_THRESHOLDS = [
+  { max: 39,  label: 'Compromised', cls: 'band-compromised', color: '#DC2626' },
+  { max: 54,  label: 'Struggling',  cls: 'band-struggling',  color: '#EA580C' },
+  { max: 69,  label: 'Stable',      cls: 'band-stable',      color: '#CA8A04' },
+  { max: 84,  label: 'Healthy',     cls: 'band-healthy',     color: '#16A34A' },
+  { max: 100, label: 'Elite',       cls: 'band-elite',       color: '#7C3AED' }
+];
+
+const MAX_DELTA = 12.0;
+const DIMINISHING_FACTOR = 0.82;
+
+/* ═══════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════ */
+
+const state = {
+  selectedActions: new Set(),
+  targetScore: BASELINE.score,
+  estimatedScore: BASELINE.score,
+  recommendedPlan: []
+};
+
+/* ═══════════════════════════════════════════
+   RULE ENGINE
+   ═══════════════════════════════════════════ */
+
+function getBand(score) {
+  for (const b of BAND_THRESHOLDS) {
+    if (score <= b.max) return b;
+  }
+  return BAND_THRESHOLDS[BAND_THRESHOLDS.length - 1];
+}
+
+function calculateNewScore(selectedIds) {
+  if (selectedIds.size === 0) return BASELINE.score;
+
+  const actions = INTERVENTIONS.filter(a => selectedIds.has(a.id));
+  // Sort descending by impact
+  actions.sort((a, b) => b.baseImpact - a.baseImpact);
+
+  let totalDelta = 0;
+  let factor = 1.0;
+  for (const action of actions) {
+    totalDelta += action.baseImpact * factor;
+    factor *= DIMINISHING_FACTOR;
+  }
+
+  // Cap
+  totalDelta = Math.min(totalDelta, MAX_DELTA);
+  return Math.min(100, Math.round((BASELINE.score + totalDelta) * 10) / 10);
+}
+
+function getImpactedBiomarkers(selectedIds) {
+  const bioMap = {};
+  const actions = INTERVENTIONS.filter(a => selectedIds.has(a.id));
+  for (const action of actions) {
+    for (const bm of action.biomarkers) {
+      if (!bioMap[bm.name]) {
+        bioMap[bm.name] = { name: bm.name, improvement: 0, sources: [] };
+      }
+      // Take max improvement for overlapping biomarkers (no double counting)
+      bioMap[bm.name].improvement = Math.max(bioMap[bm.name].improvement, bm.improvement);
+      bioMap[bm.name].sources.push(action.label);
+    }
+  }
+  return Object.values(bioMap).sort((a, b) => b.improvement - a.improvement);
+}
+
+function getConfidenceLevel(count) {
+  if (count <= 2) return { label: 'High confidence', cls: 'confidence-high' };
+  if (count <= 5) return { label: 'Moderate confidence', cls: 'confidence-medium' };
+  return { label: 'Lower confidence', cls: 'confidence-low' };
+}
+
+function recommendActionsForTarget(targetScore) {
+  const delta = targetScore - BASELINE.score;
+  if (delta <= 0) return [];
+
+  // Greedily pick actions by impact until we reach target
+  const sorted = [...INTERVENTIONS].sort((a, b) => b.baseImpact - a.baseImpact);
+  const selected = [];
+  let accumulated = 0;
+  let factor = 1.0;
+
+  for (const action of sorted) {
+    if (accumulated >= delta) break;
+    const contrib = action.baseImpact * factor;
+    accumulated += contrib;
+    factor *= DIMINISHING_FACTOR;
+    selected.push({ ...action, effectiveImpact: Math.round(contrib * 10) / 10 });
+    if (Math.min(accumulated, MAX_DELTA) >= delta) break;
+  }
+
+  return selected;
+}
+
+function getAchievability(targetScore) {
+  const delta = targetScore - BASELINE.score;
+  if (delta <= 0) return { level: 'achievable', icon: '✅', msg: 'You\'re already at or above this score.' };
+  if (delta <= 5) return { level: 'achievable', icon: '✅', msg: 'Achievable with a few focused actions.' };
+  if (delta <= 9) return { level: 'stretch', icon: '💪', msg: 'A stretch goal — requires sustained multi-area effort.' };
+  if (delta <= MAX_DELTA) return { level: 'difficult', icon: '⚡', msg: 'Ambitious target — maximum combined intervention benefit.' };
+  return { level: 'unreachable', icon: '🚧', msg: `Exceeds the estimated max improvement of +${MAX_DELTA}. Consider a closer target first.` };
+}
+
+const TIME_BANDS = ['2–4 weeks', '4–8 weeks', '8–12 weeks', '3–6 months'];
+function getTimeBand(improvement) {
+  if (improvement <= 10) return TIME_BANDS[0];
+  if (improvement <= 20) return TIME_BANDS[1];
+  if (improvement <= 30) return TIME_BANDS[2];
+  return TIME_BANDS[3];
+}
+
+/* ═══════════════════════════════════════════
+   RENDERING
+   ═══════════════════════════════════════════ */
+
+// Score ring
+const CIRCUMFERENCE = 2 * Math.PI * 70; // ≈ 439.82
+
+function renderScoreRing(score, animate) {
+  const ring = document.getElementById('scoreRing');
+  const offset = CIRCUMFERENCE * (1 - score / 100);
+  if (animate) {
+    ring.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+  }
+  ring.style.strokeDasharray = CIRCUMFERENCE;
+  ring.style.strokeDashoffset = offset;
+}
+
+function animateNumber(el, from, to, duration = 800) {
+  const start = performance.now();
+  const diff = to - from;
+  function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    const current = from + diff * eased;
+    el.textContent = current.toFixed(1);
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function renderMainScore() {
+  const score = BASELINE.score;
+  const band = getBand(score);
+  const numEl = document.getElementById('mainScoreNum');
+  animateNumber(numEl, 0, score, 1200);
+  renderScoreRing(score, true);
+
+  const badge = document.getElementById('mainBandBadge');
+  badge.textContent = band.label;
+  badge.className = 'score-band-badge ' + band.cls;
+
+  const d = new Date(BASELINE.lastUpdated);
+  document.getElementById('lastUpdated').textContent =
+    'Last updated: ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
+    ' at ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+}
+
+function renderContributors() {
+  const container = document.getElementById('contributorsContainer');
+  let html = '';
+
+  // Negative
+  html += '<div class="contributor-section">';
+  html += '<div class="contributor-label negative">▼ Pulling score down</div>';
+  for (const c of BASELINE.contributors.negative) {
+    html += `
+      <div class="contributor-item">
+        <span class="contributor-name">${c.name}</span>
+        <div class="contributor-bar-track">
+          <div class="contributor-bar-fill negative" style="width:0" data-width="${c.contribution * 3}%"></div>
+        </div>
+        <span class="contributor-pct negative">${c.contribution}%</span>
+      </div>
+      <div class="contributor-detail">${c.detail}</div>`;
+  }
+  html += '</div>';
+
+  // Positive
+  html += '<div class="contributor-section">';
+  html += '<div class="contributor-label positive">▲ Supporting score</div>';
+  for (const c of BASELINE.contributors.positive) {
+    html += `
+      <div class="contributor-item">
+        <span class="contributor-name">${c.name}</span>
+        <div class="contributor-bar-track">
+          <div class="contributor-bar-fill positive" style="width:0" data-width="${c.contribution * 3}%"></div>
+        </div>
+        <span class="contributor-pct positive">${c.contribution}%</span>
+      </div>
+      <div class="contributor-detail">${c.detail}</div>`;
+  }
+  html += '</div>';
+
+  container.innerHTML = html;
+
+  // Animate bars
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      container.querySelectorAll('.contributor-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width;
+      });
+    }, 200);
+  });
+}
+
+function renderInterventionChips() {
+  const grid = document.getElementById('interventionsGrid');
+  let html = '';
+  for (const action of INTERVENTIONS) {
+    const isActive = state.selectedActions.has(action.id);
+    html += `
+      <div class="intervention-chip ${isActive ? 'active' : ''}"
+           data-id="${action.id}"
+           tabindex="0"
+           role="switch"
+           aria-checked="${isActive}"
+           onclick="toggleAction('${action.id}')"
+           onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleAction('${action.id}');}">
+        <span class="chip-icon">${action.icon}</span>
+        <span class="chip-label">${action.label}</span>
+        <div class="chip-toggle">
+          <input type="checkbox" ${isActive ? 'checked' : ''} tabindex="-1" aria-hidden="true">
+          <span class="toggle-track"></span>
+          <span class="toggle-thumb"></span>
+        </div>
+      </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function renderEstimatedScore() {
+  const score = state.estimatedScore;
+  const delta = Math.round((score - BASELINE.score) * 10) / 10;
+  const band = getBand(score);
+
+  document.getElementById('estCurrent').textContent = BASELINE.score.toFixed(1);
+
+  const newEl = document.getElementById('estNew');
+  const currentVal = parseFloat(newEl.textContent) || BASELINE.score;
+  animateNumber(newEl, currentVal, score, 500);
+
+  const deltaEl = document.getElementById('estDelta');
+  if (delta > 0) {
+    deltaEl.textContent = '+' + delta.toFixed(1);
+    deltaEl.className = 'est-delta';
+  } else {
+    deltaEl.textContent = '+0.0';
+    deltaEl.className = 'est-delta zero';
+  }
+
+  const bandEl = document.getElementById('estBand');
+  bandEl.textContent = band.label;
+  bandEl.style.color = band.color;
+}
+
+function renderBiomarkers() {
+  const list = document.getElementById('biomarkerList');
+  const bms = getImpactedBiomarkers(state.selectedActions);
+
+  if (bms.length === 0) {
+    list.innerHTML = '<li class="biomarker-item" style="color:var(--slate-400); font-size:12px;">Toggle actions above to see impacted biomarkers</li>';
+    return;
+  }
+
+  let html = '';
+  for (const bm of bms) {
+    html += `
+      <li class="biomarker-item">
+        <span class="biomarker-dot positive"></span>
+        <span class="biomarker-name">${bm.name}</span>
+        <span class="biomarker-change positive">+${bm.improvement}%</span>
+      </li>`;
+  }
+  list.innerHTML = html;
+}
+
+function renderConfidence() {
+  const container = document.getElementById('confidenceBadgeContainer');
+  const count = state.selectedActions.size;
+  if (count === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  const conf = getConfidenceLevel(count);
+  container.innerHTML = `
+    <div class="confidence-badge ${conf.cls}" title="Based on ${count} combined action(s)">
+      <span class="confidence-dot"></span>
+      ${conf.label} · ${count} action${count > 1 ? 's' : ''}
+    </div>`;
+}
+
+function renderTargetTab() {
+  const target = state.targetScore;
+  const band = getBand(target);
+  const achieve = getAchievability(target);
+  const delta = target - BASELINE.score;
+
+  document.getElementById('targetBigNum').textContent = target.toFixed(1);
+
+  const bandLabel = document.getElementById('targetBandLabel');
+  bandLabel.textContent = band.label;
+  bandLabel.style.color = band.color;
+
+  // Achievability
+  const achBox = document.getElementById('achievabilityBox');
+  if (delta > 0) {
+    achBox.style.display = 'flex';
+    achBox.className = 'achievability-box ' + achieve.level;
+    achBox.innerHTML = `<span class="achievability-icon">${achieve.icon}</span><span>${achieve.msg}</span>`;
+  } else {
+    achBox.style.display = 'none';
+  }
+
+  // Recommended plan
+  const planContainer = document.getElementById('actionPlan');
+  const planList = document.getElementById('planActionsList');
+  const recommended = recommendActionsForTarget(target);
+  state.recommendedPlan = recommended;
+
+  if (delta > 0 && recommended.length > 0) {
+    planContainer.style.display = 'block';
+    let html = '';
+    for (const action of recommended) {
+      html += `
+        <div class="plan-action-item">
+          <span class="plan-action-icon">${action.icon}</span>
+          <div class="plan-action-info">
+            <div class="plan-action-name">${action.label}</div>
+            <div class="plan-action-impact">+${action.effectiveImpact} score points</div>
+          </div>
+          <span class="plan-action-check">✓</span>
+        </div>`;
+    }
+    planList.innerHTML = html;
+  } else {
+    planContainer.style.display = 'none';
+  }
+
+  // Biomarker improvements
+  const bioimpContainer = document.getElementById('biomarkerImprovements');
+  const bioimpList = document.getElementById('bioimpList');
+
+  if (delta > 0 && recommended.length > 0) {
+    const recIds = new Set(recommended.map(a => a.id));
+    const bms = getImpactedBiomarkers(recIds);
+    if (bms.length > 0) {
+      bioimpContainer.style.display = 'block';
+      let html = '';
+      for (const bm of bms) {
+        const currentRank = 'Current';
+        const targetRank = 'Improved';
+        html += `
+          <div class="bioimp-item">
+            <span class="bioimp-name">${bm.name}</span>
+            <span class="bioimp-current">${currentRank}</span>
+            <span class="bioimp-arrow">→</span>
+            <span class="bioimp-target">${targetRank}</span>
+            <span class="bioimp-time">${getTimeBand(bm.improvement)}</span>
+          </div>`;
+      }
+      bioimpList.innerHTML = html;
+    } else {
+      bioimpContainer.style.display = 'none';
+    }
+  } else {
+    bioimpContainer.style.display = 'none';
+  }
+
+  // Apply button
+  document.getElementById('applyPlanBtn').disabled = delta <= 0 || recommended.length === 0;
+}
+
+function renderDebug() {
+  const drawer = document.getElementById('debugDrawer');
+  const selected = [...state.selectedActions];
+  const actions = INTERVENTIONS.filter(a => state.selectedActions.has(a.id));
+  const bms = getImpactedBiomarkers(state.selectedActions);
+  const delta = Math.round((state.estimatedScore - BASELINE.score) * 10) / 10;
+
+  let html = '<div class="debug-section">';
+  html += `<span class="debug-key">baseline_score:</span> <span class="debug-val">${BASELINE.score}</span><br>`;
+  html += `<span class="debug-key">estimated_score:</span> <span class="debug-val">${state.estimatedScore}</span><br>`;
+  html += `<span class="debug-key">delta:</span> <span class="debug-val">+${delta}</span><br>`;
+  html += `<span class="debug-key">band:</span> <span class="debug-val">${getBand(state.estimatedScore).label}</span>`;
+  html += '</div>';
+
+  html += '<div class="debug-section">';
+  html += `<span class="debug-key">selected_actions:</span> <span class="debug-bracket">[</span><br>`;
+  for (const id of selected) {
+    const a = INTERVENTIONS.find(i => i.id === id);
+    html += `  <span class="debug-val">"${id}"</span> <span class="debug-bracket">(base: ${a.baseImpact})</span><br>`;
+  }
+  html += '<span class="debug-bracket">]</span>';
+  html += '</div>';
+
+  html += '<div class="debug-section">';
+  html += `<span class="debug-key">impacted_biomarkers:</span> <span class="debug-bracket">[</span><br>`;
+  for (const bm of bms) {
+    html += `  <span class="debug-val">"${bm.name}"</span>: <span class="debug-bracket">+${bm.improvement}% (via ${bm.sources.join(', ')})</span><br>`;
+  }
+  html += '<span class="debug-bracket">]</span>';
+  html += '</div>';
+
+  html += `<span class="debug-key">max_cap:</span> <span class="debug-val">${MAX_DELTA}</span><br>`;
+  html += `<span class="debug-key">diminishing_factor:</span> <span class="debug-val">${DIMINISHING_FACTOR}</span><br>`;
+  html += `<span class="debug-key">confidence:</span> <span class="debug-val">${selected.length > 0 ? getConfidenceLevel(selected.length).label : 'N/A'}</span>`;
+
+  drawer.innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════
+   EVENT HANDLERS
+   ═══════════════════════════════════════════ */
+
+function toggleAction(id) {
+  if (state.selectedActions.has(id)) {
+    state.selectedActions.delete(id);
+  } else {
+    state.selectedActions.add(id);
+  }
+  state.estimatedScore = calculateNewScore(state.selectedActions);
+  renderInterventionChips();
+  renderEstimatedScore();
+  renderBiomarkers();
+  renderConfidence();
+  renderDebug();
+}
+
+function resetAll() {
+  state.selectedActions.clear();
+  state.estimatedScore = BASELINE.score;
+  renderInterventionChips();
+  renderEstimatedScore();
+  renderBiomarkers();
+  renderConfidence();
+  renderDebug();
+  showToast('All actions reset');
+}
+
+function switchTab(index) {
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === index);
+  });
+  document.querySelectorAll('.tab-content').forEach((content, i) => {
+    content.classList.toggle('active', i === index);
+  });
+  if (index === 1) {
+    renderTargetTab();
+  }
+  // Scroll to tabs
+  document.getElementById('mode-switch-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function applyPlan() {
+  const recommended = state.recommendedPlan;
+  if (recommended.length === 0) return;
+
+  // Clear current selections
+  state.selectedActions.clear();
+
+  // Apply recommended actions
+  for (const action of recommended) {
+    state.selectedActions.add(action.id);
+  }
+
+  state.estimatedScore = calculateNewScore(state.selectedActions);
+
+  // Switch to Tab 1
+  switchTab(0);
+
+  // Re-render
+  renderInterventionChips();
+  renderEstimatedScore();
+  renderBiomarkers();
+  renderConfidence();
+  renderDebug();
+
+  showToast('Plan applied — ' + recommended.length + ' actions activated');
+}
+
+function scrollToEl(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function toggleDebug() {
+  const drawer = document.getElementById('debugDrawer');
+  drawer.classList.toggle('open');
+  renderDebug();
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+/* ═══════════════════════════════════════════
+   TARGET SLIDER
+   ═══════════════════════════════════════════ */
+
+const slider = document.getElementById('targetSlider');
+slider.min = 0;
+slider.max = 100;
+slider.value = BASELINE.score;
+
+slider.addEventListener('input', function() {
+  state.targetScore = Math.round(parseFloat(this.value) * 10) / 10;
+  renderTargetTab();
+});
+
+/* ═══════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════ */
+
+function init() {
+  renderMainScore();
+  renderContributors();
+  renderInterventionChips();
+  renderEstimatedScore();
+  renderBiomarkers();
+  renderConfidence();
+  renderTargetTab();
+  renderDebug();
+
+  // Set slider current label
+  document.getElementById('sliderCurrentLabel').textContent = BASELINE.score.toFixed(1);
+}
+
+// Run on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
