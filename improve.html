@@ -235,11 +235,12 @@
       font-size: 11px;
       color: var(--text-muted);
       white-space: nowrap;
+      display: none;
     }
 
     .band-progress-track {
       flex: 1;
-      height: 4px;
+      height: 7px;
       background: var(--bg-elevated);
       border-radius: var(--radius-full);
       overflow: hidden;
@@ -941,8 +942,8 @@
       -webkit-backdrop-filter: blur(20px);
       border-radius: 18px 18px 0 0;
       z-index: 100;
-      padding: 8px 0 10px;
-      padding-bottom: max(10px, env(safe-area-inset-bottom));
+      padding: 8px 0 14px;
+      padding-bottom: max(14px, env(safe-area-inset-bottom));
       box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.06);
       border-bottom: none;
@@ -962,7 +963,7 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      height: 46px;
+      height: 50px;
       width: 100%;
       padding: 0 6px;
     }
@@ -1420,7 +1421,7 @@
         html += `<div class="action-tab ${isActive ? 'active' : ''}" data-tab="${type.id}">
           <span>${type.icon}</span>
           <span>${type.label}</span>
-          <span class="tab-badge ${typeSelected ? '' : 'empty'}">${typeSelected || '0'}</span>
+          <span class="tab-badge ${typeSelected ? '' : 'empty'}">${typeSelected}/${type.categories.length}</span>
         </div>`;
       }
       html += '</div><div class="action-category-panel"><div class="action-category-grid">';

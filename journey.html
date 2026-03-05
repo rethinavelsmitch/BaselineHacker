@@ -127,9 +127,9 @@
     }
     .journey-start-pill {
       position: absolute;
-      left: 50%;
+      left: 12px;
       top: 6px;
-      transform: translateX(-50%);
+      transform: none;
       z-index: 3;
       display: inline-flex;
       align-items: center;
@@ -171,9 +171,8 @@
       stroke-width: 16;
       stroke-linecap: round;
       stroke-linejoin: round;
-      stroke-dasharray: 2200;
-      stroke-dashoffset: 2200;
-      animation: draw 2.4s ease forwards;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
     }
     .journey-end-icon {
       position: absolute;
@@ -205,11 +204,12 @@
       position: relative;
       z-index: 1;
       display: grid;
-      gap: 24px;
+      gap: 78px;
     }
     .phase-row {
       display: flex;
-      min-height: 150px;
+      min-height: 36px;
+      align-items: flex-start;
     }
     .phase-row.left .phase-card { margin-left: auto; }
     .phase-row.right .phase-card { margin-right: auto; }
@@ -223,7 +223,7 @@
       transform: translateY(12px);
       opacity: 0;
       animation: reveal 420ms ease forwards;
-      min-height: 132px;
+      min-height: 0;
       width: min(206px, 50vw);
     }
     .phase-head {
@@ -270,7 +270,7 @@
       padding: 6px;
       font-size: 9.5px;
       color: var(--ink-700);
-      min-height: 54px;
+      min-height: 0;
       line-height: 1.45;
     }
     .phase-note strong {
@@ -322,7 +322,7 @@
             <stop offset="100%" stop-color="var(--track-e)" />
           </linearGradient>
         </defs>
-        <path class="journey-path" id="journeyPath" d="M210 48 C340 96, 340 176, 210 228 C80 280, 80 360, 210 412 C340 464, 340 544, 210 596 C80 648, 80 728, 210 780 C340 832, 340 912, 210 948" />
+        <path class="journey-path" id="journeyPath" d="M66 42 C220 70, 340 120, 210 212 C80 300, 80 380, 210 452 C340 524, 340 608, 210 680 C80 752, 80 836, 210 916" />
       </svg>
       <div class="phase-list" id="phaseList"></div>
       <div class="journey-end-icon" id="journeyEndIcon" aria-hidden="true"></div>
@@ -378,12 +378,13 @@
         `${(target - current >= 0 ? '+' : '') + (target - current).toFixed(1)} projected improvement`;
 
       const list = document.getElementById('phaseList');
+      const wrap = document.querySelector('.timeline-wrap');
       if (!actions.length) {
         list.innerHTML = '<div class="phase-card"><div class="phase-title">No selected actions</div><div class="phase-note"><strong>Recommendation</strong>Go back and choose actions to build your score journey.</div></div>';
         const endIconEmpty = document.getElementById('journeyEndIcon');
         endIconEmpty.innerHTML = getEndIconMarkup(target);
         endIconEmpty.style.color = getInferenceColor(target);
-        endIconEmpty.style.top = '500px';
+        endIconEmpty.style.top = `${Math.max(420, wrap.clientHeight - 60)}px`;
         return;
       }
 
@@ -406,15 +407,15 @@
       `; }).join('');
 
       // Stretch the timeline curve to the full scroll content height.
-      const wrap = document.querySelector('.timeline-wrap');
       const svg = document.querySelector('.path-svg');
       const path = document.getElementById('journeyPath');
-      const contentHeight = Math.max(wrap.clientHeight, list.scrollHeight + 140);
+      const contentHeight = Math.max(wrap.clientHeight, list.scrollHeight + 100);
       const waves = Math.max(actions.length + 1, 5);
+      const startX = 66;
       const startY = 42;
-      const step = (contentHeight - startY - 24) / waves;
+      const step = (contentHeight - startY - 36) / waves;
       let y = startY;
-      let d = `M210 ${startY.toFixed(1)}`;
+      let d = `M${startX} ${startY.toFixed(1)}`;
       for (let i = 0; i < waves; i++) {
         const dirX = i % 2 === 0 ? 342 : 78;
         const c1y = y + step * 0.35;
@@ -425,11 +426,18 @@
       svg.style.height = contentHeight + 'px';
       svg.setAttribute('viewBox', `0 0 420 ${Math.round(contentHeight)}`);
       path.setAttribute('d', d);
+      const totalLen = path.getTotalLength();
+      path.style.strokeDasharray = `${totalLen}`;
+      path.style.strokeDashoffset = `${totalLen}`;
+      path.style.animation = 'none';
+      requestAnimationFrame(() => {
+        path.style.animation = 'draw 2.4s ease forwards';
+      });
 
       const endIcon = document.getElementById('journeyEndIcon');
       endIcon.innerHTML = getEndIconMarkup(target);
       endIcon.style.color = getInferenceColor(target);
-      endIcon.style.top = `${contentHeight - 52}px`;
+      endIcon.style.top = `${contentHeight - 58}px`;
     }
 
     if (document.readyState === 'loading') {
